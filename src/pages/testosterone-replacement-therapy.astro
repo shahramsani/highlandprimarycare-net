@@ -1,0 +1,387 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTABanner from '../components/CTABanner.astro';
+import FAQ from '../components/FAQ.astro';
+import BookingEmbed from '../components/BookingEmbed.astro';
+import Testimonial from '../components/Testimonial.astro';
+import Icon from '../components/Icon.astro';
+import { BOOKING, CONTACT } from '../config';
+import { faqSchema, medicalServiceSchema } from '../schema';
+
+const faqs = [
+  {
+    q: 'What is testosterone replacement therapy (TRT)?',
+    a: 'TRT is a medical treatment that replaces testosterone your body isn\u2019t producing adequately. It\u2019s FDA-approved and has been used safely for over 75 years to treat low testosterone (hypogonadism). Treatment typically involves weekly self-injections of pharmaceutical-grade testosterone.',
+  },
+  {
+    q: 'Is TRT safe?',
+    a: 'When properly monitored by qualified medical professionals, TRT is very safe. We monitor your labs every 3 months and adjust your dosage as needed. Side effects are rare and manageable. Our physicians have 15+ years of experience in hormone optimization.',
+  },
+  {
+    q: 'How much does treatment cost?',
+    a: 'Monthly programs range from $179 to $399 depending on tier. The initial comprehensive assessment is $79 (a $350+ value). Pricing includes medication, labs, provider visits, and support. HSA/FSA accepted.',
+  },
+  {
+    q: 'Do you accept insurance?',
+    a: 'We operate on a direct-pay model which actually works in your favor — better medications, faster service, unlimited provider access without insurance hassles. HSA/FSA accepted and we provide superbills for potential reimbursement.',
+  },
+  {
+    q: 'How long until I see results?',
+    a: 'Most men notice improvements in energy and mood within 2–3 weeks. Physical changes (muscle gain, fat loss) typically occur within 2–3 months. Full optimization can take 6–12 months. Results vary by individual.',
+  },
+  {
+    q: 'Can I use my HSA or FSA?',
+    a: 'Yes. TRT is a qualified medical expense. We accept HSA/FSA payments and provide all documentation needed for reimbursement.',
+  },
+];
+
+const tiers = [
+  {
+    name: 'Testosterone Essentials',
+    price: 199,
+    daily: '$6.63 per day',
+    tagline: 'Quality TRT without extras',
+    features: [
+      'Pharmaceutical-grade testosterone (injectable)',
+      'All injection supplies',
+      'Unlimited messaging with your provider',
+      'Quarterly lab monitoring (4×/yr)',
+      'Quarterly telehealth check-ins',
+      'Injection training and ongoing support',
+      '24/7 patient portal access',
+    ],
+  },
+  {
+    name: 'Complete Optimization',
+    price: 299,
+    daily: '$9.97 per day',
+    tagline: 'Complete hormonal optimization',
+    features: [
+      'Everything in Essentials, plus:',
+      'HCG (maintains natural T production and fertility)',
+      'Estrogen blocker if needed',
+      'Monthly provider check-ins',
+      'Priority lab processing',
+      'Priority appointment scheduling',
+      'Nutrition and exercise optimization guide',
+      '20% discount on additional services',
+    ],
+    featured: true,
+  },
+  {
+    name: 'Executive Performance',
+    price: 499,
+    daily: '$16.63 per day',
+    tagline: 'Concierge-level care',
+    features: [
+      'Everything in Complete, plus:',
+      'Premium peptide therapy (BPC-157, Ipamorelin, or CJC-1295)',
+      'Bi-weekly provider check-ins',
+      'Advanced labs (thyroid, vitamin D, inflammation)',
+      'Dedicated care coordinator',
+      'Quarterly body composition analysis',
+      'Annual executive wellness assessment',
+      '30% discount on additional services',
+    ],
+  },
+];
+
+const testimonials = [
+  {
+    quote: "I was skeptical at first, but within 3 weeks I started feeling like my old self again. Energy is back, sleeping better, and I've lost 12 pounds without trying. The team actually cares — they remember my name.",
+    name: 'Mike R., Age 47',
+    city: 'Sherman, TX',
+  },
+  {
+    quote: 'After years of feeling run down, I finally did something about it. Best decision I\u2019ve made in a decade. I have energy to keep up with my grandkids now.',
+    name: 'James T., Age 52',
+    city: 'Denison, TX',
+  },
+  {
+    quote: 'I drive right past the clinic on my way to work, so it\u2019s super convenient. Telehealth follow-ups, medication delivered to my house, and the price is actually affordable.',
+    name: 'David K., Age 41',
+    city: 'Sherman, TX',
+  },
+];
+---
+
+<BaseLayout
+  title="Testosterone Replacement Therapy Sherman TX — Highland Primary Care"
+  description="Doctor-supervised TRT in Sherman, TX. $79 comprehensive assessment. Texas-licensed physicians. HIPAA-compliant. Restore energy and vitality."
+  schemaJson={[
+    medicalServiceSchema({
+      name: 'Testosterone Replacement Therapy',
+      description:
+        'Physician-supervised hormone replacement therapy for men with clinically low testosterone. Comprehensive labs, evidence-based protocols, and ongoing optimization.',
+      slug: 'testosterone-replacement-therapy',
+    }),
+    faqSchema(faqs),
+  ]}
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-surface-dark text-white">
+    <div class="pointer-events-none absolute -right-32 -top-20 h-[28rem] w-[28rem] rounded-full bg-brand-red/20 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-40 left-1/3 h-[24rem] w-[24rem] rounded-full bg-brand-blue/20 blur-3xl"></div>
+
+    <div class="container-x relative py-16 lg:py-22">
+      <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div class="animate-fade-up">
+          <span class="eyebrow text-brand-red-soft">TRT · Sherman, TX</span>
+          <h1 class="mt-4 font-display text-display font-semibold text-white text-balance">
+            Are you tired of<br />
+            <span class="italic text-brand-red">feeling tired,</span> Sherman?
+          </h1>
+          <p class="mt-6 max-w-xl text-lead text-white/85 text-pretty">
+            Reclaim your energy, strength, and vitality with doctor-supervised testosterone therapy — right here in Sherman, Texas.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href={BOOKING.trt} class="btn bg-brand-red text-white hover:bg-brand-red-dark">
+              <Icon name="calendar" size={18} />
+              Get Your $79 Assessment
+            </a>
+            <a href={`tel:${CONTACT.phoneRaw}`} class="btn border-2 border-white bg-transparent text-white hover:bg-white hover:text-surface-dark">
+              <Icon name="phone" size={18} />
+              {CONTACT.phone}
+            </a>
+          </div>
+          <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-meta">
+            <li class="inline-flex items-center gap-2 text-white/80">
+              <Icon name="shield-check" size={16} />
+              Texas-Licensed Physicians
+            </li>
+            <li class="inline-flex items-center gap-2 text-white/80">
+              <Icon name="shield" size={16} />
+              HIPAA Compliant
+            </li>
+            <li class="inline-flex items-center gap-2 text-white/80">
+              <Icon name="map-pin" size={16} />
+              Sherman, TX
+            </li>
+          </ul>
+          <p class="mt-6 text-meta text-white/50">
+            *Individual results may vary. Treatment effectiveness depends on proper medical evaluation and adherence to prescribed protocols.
+          </p>
+        </div>
+
+        <!-- Offer card -->
+        <div class="relative rounded-2xl border-2 border-brand-red bg-paper-elevated p-8 text-ink-900 shadow-soft-lg">
+          <span class="inline-block rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-wider text-white">
+            Limited Time Offer
+          </span>
+          <h2 class="mt-4 font-display text-h2 text-ink-900">Complete Hormone Assessment</h2>
+          <div class="mt-4 flex items-end gap-3">
+            <span class="font-display text-h1 text-brand-red">$79</span>
+            <span class="pb-2 text-h4 text-ink-300 line-through">$350 value</span>
+          </div>
+          <ul class="mt-6 space-y-3 border-t border-ink-100 pt-6">
+            <li class="flex gap-3">
+              <Icon name="stethoscope" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+              <div>
+                <span class="block font-semibold text-ink-900">Physician Consultation ($150 value)</span>
+                <span class="text-meta text-ink-500">Medical history, symptom evaluation, physical assessment</span>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="flask" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+              <div>
+                <span class="block font-semibold text-ink-900">Complete Lab Panel ($200 value)</span>
+                <span class="text-meta text-ink-500">Total & Free T, Estradiol, PSA, CBC, CMP, additional markers</span>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="list-checks" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+              <div>
+                <span class="block font-semibold text-ink-900">Personalized Treatment Plan</span>
+                <span class="text-meta text-ink-500">Lab review, custom recommendations, patient education</span>
+              </div>
+            </li>
+          </ul>
+          <a href={BOOKING.trt} class="btn-primary mt-6 w-full">Claim Your Spot Now</a>
+          <p class="mt-3 text-meta text-ink-500">
+            <Icon name="shield-check" size={14} class="-mt-0.5 mr-1 inline text-brand-blue-dark" />
+            100% satisfaction guarantee — full refund if not satisfied.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Why Sherman Men Trust Us"
+        title="Real medical care. Real results."
+        align="center"
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {
+          [
+            { icon: 'shield-check', title: 'Texas-Licensed Physicians', body: 'All treatment supervised by licensed Texas physicians specializing in testosterone replacement therapy and hormone optimization.' },
+            { icon: 'briefcase', title: '15+ Years Experience', body: 'Extensive experience in testosterone replacement therapy and men\u2019s health optimization.' },
+            { icon: 'microscope', title: 'Evidence-Based Protocols', body: 'Treatment protocols based on the latest clinical research and medical guidelines from AUA and the Endocrine Society.' },
+          ].map((c) => (
+            <div class="card">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-brand-red-soft text-brand-red">
+                <Icon name={c.icon as any} size={24} />
+              </span>
+              <h3 class="mt-4 font-display text-h3 text-ink-900">{c.title}</h3>
+              <p class="mt-2 text-body text-ink-500">{c.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="How It Works"
+        title="Getting started is simple."
+        align="center"
+      />
+      <ol class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            { icon: 'calendar', title: 'Book Your Visit', body: 'Choose a time that fits your schedule. Online booking available 24/7. Takes 60 seconds.' },
+            { icon: 'flask', title: 'Get Tested ($79)', body: 'Come to our Sherman clinic for your comprehensive consultation and lab work. Results in 3–5 days.' },
+            { icon: 'list-checks', title: 'Review Your Results', body: 'Schedule a follow-up (in-person or telehealth). Your physician explains everything in plain English.' },
+            { icon: 'syringe', title: 'Start Treatment', body: 'If you\u2019re a candidate, we create a personalized treatment plan. Medication ships directly to your door.' },
+          ].map((s, i) => (
+            <li class="card relative">
+              <span class="absolute -top-3 left-6 inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-red text-meta font-bold text-white">
+                {i + 1}
+              </span>
+              <Icon name={s.icon as any} size={28} class="mt-2 text-brand-blue-dark" />
+              <h3 class="mt-3 font-display text-h4 text-ink-900">{s.title}</h3>
+              <p class="mt-2 text-meta text-ink-500">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="mx-auto mt-8 max-w-2xl text-center text-meta text-ink-500">
+        Most men notice improvements in energy and mood within 2–4 weeks. Results vary by individual.
+      </p>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Real Results"
+        title="Real men. Real results."
+        align="center"
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {testimonials.map((t) => <Testimonial {...t} />)}
+      </div>
+      <p class="mx-auto mt-8 max-w-2xl text-center text-meta text-ink-300">
+        Individual patient testimonials reflect personal experiences. Results vary and are not guaranteed.
+      </p>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Pricing"
+        title="Transparent pricing — no surprises."
+        lede="No hidden fees. You know exactly what you're paying for."
+        align="center"
+      />
+      <div class="mt-12 grid gap-4 lg:grid-cols-3">
+        {
+          tiers.map((tier) => (
+            <div
+              class:list={[
+                'rounded-xl border p-6 lg:p-8',
+                tier.featured ? 'border-brand-red bg-paper-elevated shadow-soft-lg ring-2 ring-brand-red' : 'border-ink-100 bg-paper-elevated',
+              ]}
+            >
+              {tier.featured && (
+                <span class="inline-block rounded-full bg-brand-red px-3 py-0.5 text-eyebrow font-semibold uppercase tracking-wider text-white">
+                  Most Popular
+                </span>
+              )}
+              <h3 class="mt-3 font-display text-h3 text-ink-900">{tier.name}</h3>
+              <p class="mt-1 text-meta text-ink-500">{tier.tagline}</p>
+              <p class="mt-6 font-display text-display text-ink-900">
+                ${tier.price}<span class="text-h4 text-ink-500">/month</span>
+              </p>
+              <p class="text-meta text-ink-500">{tier.daily}</p>
+              <ul class="mt-6 space-y-2.5">
+                {
+                  tier.features.map((f) => (
+                    <li class="flex gap-2 text-meta text-ink-700">
+                      <Icon name="check" size={16} class="mt-0.5 shrink-0 text-brand-red" />
+                      <span>{f}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+              <a
+                href={BOOKING.trt}
+                class:list={['btn mt-8 w-full', tier.featured ? 'bg-brand-red text-white hover:bg-brand-red-dark' : 'btn-secondary']}
+              >
+                Get Started
+              </a>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-8 text-center text-meta text-ink-500">
+        HSA/FSA accepted · All major credit cards · Automatic monthly billing · Payment plans available for annual subscriptions
+      </p>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE -->
+  <section class="section">
+    <div class="container-x">
+      <div class="rounded-xl border border-ink-100 bg-paper-tinted p-8">
+        <p class="mx-auto max-w-3xl text-center text-meta text-ink-500">
+          Our clinic operates in full compliance with Texas Medical Board regulations, DEA requirements for controlled substances, and all applicable state and federal healthcare laws. All testosterone prescriptions are written by Texas-licensed physicians following appropriate medical evaluation and are dispensed through DEA-registered pharmacies.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="FAQ"
+        title="Frequently asked questions"
+        align="center"
+      />
+      <div class="mx-auto mt-12 max-w-3xl">
+        <FAQ faqs={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="section">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Get Started"
+        title="Book your $79 assessment"
+        align="center"
+      />
+      <div class="mx-auto mt-12 max-w-3xl">
+        <BookingEmbed src={BOOKING.trt} />
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Start feeling like yourself again."
+    subtitle="Book your comprehensive $79 hormone assessment with our Texas-licensed physicians."
+    bookingUrl={BOOKING.trt}
+  />
+</BaseLayout>

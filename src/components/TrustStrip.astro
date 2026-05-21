@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro';
+
+interface Item {
+  icon: string;
+  label: string;
+}
+
+interface Props {
+  items?: Item[];
+  variant?: 'light' | 'dark';
+}
+
+const defaults: Item[] = [
+  { icon: 'shield-check', label: 'Board-Certified Physicians' },
+  { icon: 'briefcase', label: '25+ Years Experience' },
+  { icon: 'flask', label: 'On-Site Labs' },
+  { icon: 'check-circle', label: 'Accepting New Patients' },
+];
+
+const { items = defaults, variant = 'light' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'border-y',
+    variant === 'light'
+      ? 'border-ink-100 bg-paper-elevated'
+      : 'border-white/10 bg-surface-dark text-white',
+  ]}
+>
+  <div class="container-x py-5">
+    <ul class="grid grid-cols-2 gap-y-4 md:grid-cols-4 md:gap-x-8">
+      {
+        items.map((item) => (
+          <li class="flex items-center gap-2.5 text-[0.9375rem] font-medium">
+            <span
+              class:list={[
+                'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md',
+                variant === 'light' ? 'bg-brand-blue-soft text-brand-blue-dark' : 'bg-white/10 text-white',
+              ]}
+            >
+              <Icon name={item.icon as any} size={18} />
+            </span>
+            <span class={variant === 'light' ? 'text-ink-700' : 'text-white'}>{item.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

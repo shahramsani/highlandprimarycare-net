@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ProviderCard from '../components/ProviderCard.astro';
+import CTABanner from '../components/CTABanner.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import Icon from '../components/Icon.astro';
+import { PROVIDERS } from '../config';
+import { localBusinessSchema } from '../schema';
+---
+
+<BaseLayout
+  title="About Highland Primary Care — Doctors in Sherman TX"
+  description="Meet the board-certified doctors and providers at Highland Primary Care in Sherman, TX. Compassionate, comprehensive care for the whole family."
+  schemaJson={localBusinessSchema()}
+>
+  <section class="bg-paper">
+    <div class="container-x py-16 lg:py-22">
+      <SectionHeader
+        as="h1"
+        eyebrow="About Us"
+        title="Compassionate primary care, built on real relationships."
+        lede="Highland Primary Care is a long-established Sherman, TX clinic dedicated to providing personalized, comprehensive healthcare for patients of all ages."
+        align="center"
+      />
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <!-- Mission / story -->
+  <section class="section">
+    <div class="container-x">
+      <div class="prose-medical mx-auto">
+        <h2>Our mission</h2>
+        <p>
+          At Highland Primary Care, we believe the foundation of good health is a strong, ongoing relationship between a patient and their physician. We take the time to listen, ask the right questions, and develop care plans that fit your life — not a template.
+        </p>
+        <p>
+          Our practice serves Sherman, Denison, Pottsboro, and the wider Texoma region with a full spectrum of primary care services: preventive medicine, chronic disease management, mental health, medical weight loss, hormone optimization, and more.
+        </p>
+        <h2>What sets us apart</h2>
+        <ul>
+          <li><strong>Board-certified physicians</strong> with decades of combined experience.</li>
+          <li><strong>On-site labs</strong> so most testing happens at the time of your visit.</li>
+          <li><strong>Same-day appointments</strong> often available for acute concerns.</li>
+          <li><strong>Most major insurance accepted</strong>, including Medicare and Medicaid.</li>
+          <li><strong>One place for the whole family</strong> — from chronic care to weight loss to mental health.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Providers -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Our Team"
+        title="Meet your providers"
+        lede="Board-certified physicians and providers dedicated to your long-term health and well-being."
+        align="center"
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {
+          PROVIDERS.map((p) => (
+            <ProviderCard
+              name={p.name}
+              title={p.title}
+              photo={p.photo}
+              specialties={p.specialties}
+              short={p.short}
+              href={`/${p.slug}/`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABanner />
+</BaseLayout>

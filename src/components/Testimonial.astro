@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  quote: string;
+  name: string;
+  city: string;
+}
+const { quote, name, city } = Astro.props;
+---
+
+<figure class="card flex h-full flex-col">
+  <div class="flex gap-0.5 text-brand-red">
+    {Array.from({ length: 5 }).map(() => <Icon name="star" size={18} class="fill-current" />)}
+  </div>
+  <blockquote class="mt-4 flex-1 text-body italic text-ink-700">
+    &ldquo;{quote}&rdquo;
+  </blockquote>
+  <figcaption class="mt-5 border-t border-ink-100 pt-4 text-meta">
+    <span class="block font-semibold text-ink-900">{name}</span>
+    <span class="text-ink-500">{city}</span>
+  </figcaption>
+</figure>

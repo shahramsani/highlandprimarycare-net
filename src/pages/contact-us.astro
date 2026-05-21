@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import BookingEmbed from '../components/BookingEmbed.astro';
+import InsuranceStrip from '../components/InsuranceStrip.astro';
+import Icon from '../components/Icon.astro';
+import { CONTACT, BOOKING } from '../config';
+import { localBusinessSchema, breadcrumbSchema } from '../schema';
+
+const breadcrumb = breadcrumbSchema([
+  { name: 'Home', url: 'https://highlandprimarycare.net/' },
+  { name: 'Contact', url: 'https://highlandprimarycare.net/contact-us/' },
+]);
+---
+
+<BaseLayout
+  title="Contact Us — Highland Primary Care Sherman TX"
+  description="Contact Highland Primary Care in Sherman, TX. Schedule appointments, ask questions, or visit us at 300 N Highland Ave, Suite 455. Call (903) 871-5671."
+  schemaJson={[localBusinessSchema(), breadcrumb]}
+>
+  <!-- HERO -->
+  <section class="bg-paper">
+    <div class="container-x py-16 lg:py-22">
+      <SectionHeader
+        as="h1"
+        eyebrow="Get In Touch"
+        title="Contact Highland Primary Care"
+        lede="Schedule an appointment, ask a question, or stop by our Sherman, TX clinic. We accept most major insurance and are accepting new patients."
+      />
+    </div>
+  </section>
+
+  <!-- INFO + MAP -->
+  <section class="pb-16">
+    <div class="container-x grid gap-8 lg:grid-cols-2">
+      <!-- Info cards -->
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="card">
+          <Icon name="map-pin" size={28} class="text-brand-red" />
+          <h3 class="mt-4 font-display text-h4">Address</h3>
+          <address class="mt-2 not-italic text-body text-ink-500">
+            {CONTACT.address.street}<br />
+            {CONTACT.address.city}, {CONTACT.address.state} {CONTACT.address.zip}
+          </address>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address.full)}`}
+            target="_blank"
+            rel="noopener"
+            class="mt-3 inline-flex items-center gap-1.5 text-meta font-semibold text-brand-blue-dark hover:text-brand-blue"
+          >
+            Get directions
+            <Icon name="arrow-up-right" size={14} />
+          </a>
+        </div>
+
+        <div class="card">
+          <Icon name="phone" size={28} class="text-brand-red" />
+          <h3 class="mt-4 font-display text-h4">Phone</h3>
+          <a href={`tel:${CONTACT.phoneRaw}`} class="mt-2 block text-body text-ink-500 hover:text-brand-blue">{CONTACT.phone}</a>
+          <p class="mt-3 text-meta text-ink-300">Call for same-day appointments</p>
+        </div>
+
+        <div class="card">
+          <Icon name="mail" size={28} class="text-brand-red" />
+          <h3 class="mt-4 font-display text-h4">Email</h3>
+          <a href={`mailto:${CONTACT.email}`} class="mt-2 block break-all text-body text-ink-500 hover:text-brand-blue">{CONTACT.email}</a>
+          <p class="mt-3 text-meta text-ink-300">For general inquiries (no PHI)</p>
+        </div>
+
+        <div class="card">
+          <Icon name="clock" size={28} class="text-brand-red" />
+          <h3 class="mt-4 font-display text-h4">Office Hours</h3>
+          <ul class="mt-2 space-y-1 text-meta text-ink-500">
+            <li class="flex justify-between gap-3">
+              <span>Mon – Fri</span>
+              <span class="font-semibold text-ink-700">8:00 AM – 5:00 PM</span>
+            </li>
+            <li class="flex justify-between gap-3">
+              <span>Sat – Sun</span>
+              <span class="text-ink-300">Closed</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="overflow-hidden rounded-xl border border-ink-100 shadow-soft-md">
+        <iframe
+          src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address.full)}&output=embed`}
+          title="Highland Primary Care location map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          style="border:0; width:100%; height:100%; min-height: 420px;"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="section-tinted py-16">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Request an Appointment"
+        title="Book your visit online"
+        lede="Fill out the form below and our team will contact you to confirm your appointment."
+        align="center"
+      />
+      <div class="mx-auto mt-12 max-w-3xl">
+        <BookingEmbed src={BOOKING.general} />
+      </div>
+    </div>
+  </section>
+
+  <!-- INSURANCE -->
+  <section class="section">
+    <div class="container-x">
+      <InsuranceStrip />
+    </div>
+  </section>
+
+  <!-- WELCOMING COPY -->
+  <section class="pb-20">
+    <div class="container-x">
+      <div class="prose-medical mx-auto">
+        <h2>Your primary care home in Sherman, TX</h2>
+        <p>
+          At Highland Primary Care, we believe that building a strong relationship with your doctor is the foundation of good health. Our board-certified physicians bring decades of combined experience in internal medicine and family practice. We take the time to listen, understand your concerns, and develop personalized treatment plans that fit your lifestyle and goals.
+        </p>
+        <p>
+          Our clinic is conveniently located at 300 N Highland Ave, Suite 455 in Sherman, Texas. We are open Monday through Friday from 8:00 AM to 5:00 PM, making it easy to fit your healthcare visits into your busy schedule. Same-day appointments are often available for urgent needs.
+        </p>
+        <h3>Why patients choose Highland Primary Care</h3>
+        <p>
+          Patients across Sherman, Denison, and the greater Grayson County area trust us for our dedication to high-quality, accessible healthcare. With on-site labs, same-day appointments, and a team that truly cares, we make it simple to stay on top of your health.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

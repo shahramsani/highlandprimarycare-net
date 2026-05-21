@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+.vercel/
+.wrangler/
+*.swp
+*.swo
+.husky/_/
+
+# Local-only Claude settings (per-user permissions)
+.claude/settings.local.json

@@ -1,0 +1,146 @@
+---
+import { CONTACT, NAV, BOOKING } from '../config';
+import Icon from './Icon.astro';
+---
+
+<header class="sticky top-0 z-40 border-b border-ink-100 bg-paper/85 backdrop-blur supports-[backdrop-filter]:bg-paper/70">
+  <!-- Announcement bar -->
+  <div class="bg-surface-dark text-white">
+    <div class="container-x flex h-9 items-center justify-between text-meta">
+      <span class="hidden md:block">
+        Now accepting new patients · Same-day appointments available
+      </span>
+      <span class="md:hidden">Accepting new patients</span>
+      <a href={`tel:${CONTACT.phoneRaw}`} class="inline-flex items-center gap-1.5 font-semibold text-white hover:text-brand-red-soft">
+        <Icon name="phone" size={14} />
+        {CONTACT.phone}
+      </a>
+    </div>
+  </div>
+
+  <!-- Main nav -->
+  <div class="container-x flex h-16 items-center justify-between md:h-20">
+    <a href="/" class="flex items-center gap-3" aria-label="Highland Primary Care home">
+      <img
+        src="/images/logo.png"
+        alt=""
+        width="56"
+        height="56"
+        class="h-10 w-10 md:h-12 md:w-12"
+        aria-hidden="true"
+      />
+      <span class="hidden font-display text-h4 font-semibold tracking-tight text-ink-900 sm:inline">
+        Highland <span class="text-brand-red">Primary Care</span>
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
+      {
+        NAV.map((item) => (
+          <div class="group relative">
+            <a
+              href={item.href}
+              class="text-[0.9375rem] font-medium text-ink-700 transition-colors hover:text-brand-red"
+            >
+              {item.label}
+              {item.children && <span class="ml-1 text-ink-300">▾</span>}
+            </a>
+            {item.children && (
+              <div class="invisible absolute left-1/2 top-full z-50 mt-2 w-80 -translate-x-1/2 rounded-xl border border-ink-100 bg-paper-elevated p-3 opacity-0 shadow-soft-lg transition-all duration-150 group-hover:visible group-hover:opacity-100">
+                <ul class="space-y-1">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        class:list={[
+                          'block rounded-md px-3 py-2 text-[0.9375rem] transition-colors',
+                          child.featured
+                            ? 'bg-brand-red-soft font-semibold text-brand-red-dark hover:bg-brand-red hover:text-white'
+                            : 'text-ink-700 hover:bg-paper-tinted hover:text-brand-blue-dark',
+                        ]}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href={`tel:${CONTACT.phoneRaw}`} class="hidden text-[0.9375rem] font-semibold text-ink-700 hover:text-brand-red md:inline">
+        {CONTACT.phone}
+      </a>
+      <a href={BOOKING.general} class="btn-primary hidden md:inline-flex">Book Visit</a>
+
+      <!-- Mobile menu toggle (hydrates as island) -->
+      <button
+        id="mobile-nav-toggle"
+        type="button"
+        class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-ink-900"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav drawer -->
+  <div
+    id="mobile-nav"
+    class="hidden lg:hidden border-t border-ink-100 bg-paper-elevated"
+  >
+    <nav class="container-x py-4" aria-label="Mobile">
+      <ul class="space-y-1">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="block rounded-md px-3 py-3 text-base font-medium text-ink-900 hover:bg-paper-tinted">
+                {item.label}
+              </a>
+              {item.children && (
+                <ul class="ml-3 mt-1 space-y-1 border-l-2 border-ink-100 pl-3">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        class:list={[
+                          'block rounded-md px-3 py-2 text-[0.9375rem]',
+                          child.featured ? 'font-semibold text-brand-red-dark' : 'text-ink-700 hover:bg-paper-tinted',
+                        ]}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <a href={BOOKING.general} class="btn-primary mt-4 w-full">Book Visit</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const nav = document.getElementById('mobile-nav');
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    nav?.classList.toggle('hidden');
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  src: string;
+  title?: string;
+  height?: number;
+}
+const { src, title = 'Book your visit', height = 720 } = Astro.props;
+---
+
+<div class="rounded-xl border border-ink-100 bg-paper-elevated p-1 shadow-soft-md">
+  <iframe
+    src={src}
+    title={title}
+    loading="lazy"
+    width="100%"
+    style={`min-height:${height}px;border:0;border-radius:0.75rem;`}
+    allow="payment; fullscreen"
+  ></iframe>
+</div>
+<noscript>
+  <p class="mt-2 text-meta text-ink-500">
+    Booking widget requires JavaScript. <a href={src} class="underline">Open in a new window</a>.
+  </p>
+</noscript>

@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  name: string;
+  title: string;
+  photo: string;
+  specialties: readonly string[];
+  short: string;
+  href: string;
+}
+const { name, title, photo, specialties, short, href } = Astro.props;
+---
+
+<article class="card card-hover group flex flex-col">
+  <div class="relative mb-5 aspect-[4/5] overflow-hidden rounded-lg bg-paper-tinted">
+    <img
+      src={photo}
+      alt={name}
+      width="600"
+      height="750"
+      loading="lazy"
+      decoding="async"
+      class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+    />
+  </div>
+
+  <h3 class="font-display text-h3 text-ink-900">{name}</h3>
+  <p class="mt-1 text-meta font-semibold uppercase tracking-wide text-brand-blue-dark">
+    {title}
+  </p>
+
+  <ul class="mt-4 flex flex-wrap gap-1.5">
+    {
+      specialties.map((s) => (
+        <li class="rounded-full bg-brand-blue-soft px-2.5 py-1 text-meta font-medium text-brand-blue-dark">
+          {s}
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="mt-4 line-clamp-4 text-body text-ink-500">{short}</p>
+
+  <a href={href} class="mt-6 inline-flex items-center gap-1.5 font-semibold text-brand-blue-dark hover:text-brand-blue">
+    Learn more
+    <Icon name="arrow-right" size={18} class="transition-transform group-hover:translate-x-0.5" />
+  </a>
+</article>

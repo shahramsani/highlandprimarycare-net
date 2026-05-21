@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTABanner from '../components/CTABanner.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import InsuranceStrip from '../components/InsuranceStrip.astro';
+import Icon from '../components/Icon.astro';
+import { CONTACT, BOOKING } from '../config';
+import { localBusinessSchema, breadcrumbSchema } from '../schema';
+
+const communities = [
+  'Sherman',
+  'Denison',
+  'Pottsboro',
+  'Howe',
+  'Whitesboro',
+  'Van Alstyne',
+  'Bells',
+  'Tioga',
+  'Gunter',
+  'Anna',
+  'Whitewright',
+  'Tom Bean',
+];
+---
+
+<BaseLayout
+  title="Primary Care Clinic Sherman TX — Location, Hours & Directions"
+  description="Highland Primary Care is conveniently located at 300 N Highland Ave Suite 455 in Sherman, TX. Same-day appointments, on-site labs, free parking."
+  schemaJson={[
+    localBusinessSchema(),
+    breadcrumbSchema([
+      { name: 'Home', url: 'https://highlandprimarycare.net/' },
+      { name: 'Location', url: 'https://highlandprimarycare.net/primary-care-sherman-tx-location/' },
+    ]),
+  ]}
+>
+  <!-- HERO -->
+  <section class="bg-paper">
+    <div class="container-x py-16 lg:py-22">
+      <SectionHeader
+        as="h1"
+        eyebrow="Sherman, Texas"
+        title="Conveniently located in the heart of Texoma"
+        lede="Highland Primary Care serves Sherman, Denison, and the broader Grayson County region with easy parking, same-day appointments, and on-site labs."
+      />
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={BOOKING.general} class="btn-primary">
+          <Icon name="calendar" size={18} />
+          Schedule Your Visit
+        </a>
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT.address.full)}`}
+          target="_blank"
+          rel="noopener"
+          class="btn-secondary"
+        >
+          <Icon name="map-pin" size={18} />
+          Get Directions
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <!-- INFO + MAP -->
+  <section class="section">
+    <div class="container-x grid gap-8 lg:grid-cols-2">
+      <div class="space-y-6">
+        <div class="card">
+          <Icon name="map-pin" size={28} class="text-brand-red" />
+          <h2 class="mt-4 font-display text-h3">Address</h2>
+          <address class="mt-2 not-italic text-body text-ink-700">
+            {CONTACT.address.street}<br />
+            {CONTACT.address.city}, {CONTACT.address.state} {CONTACT.address.zip}
+          </address>
+          <p class="mt-3 text-meta text-ink-500">
+            Located inside the 300 N Highland Ave medical building. Suite 455 is on the 4th floor — take the main elevator.
+          </p>
+        </div>
+
+        <div class="card">
+          <Icon name="clock" size={28} class="text-brand-red" />
+          <h2 class="mt-4 font-display text-h3">Office Hours</h2>
+          <ul class="mt-3 space-y-1 text-body text-ink-700">
+            {
+              CONTACT.hours.map((h) => (
+                <li class="flex justify-between gap-3">
+                  <span class="font-medium">{h.day}</span>
+                  <span class="text-ink-500">{h.open && h.close ? `${h.open} – ${h.close}` : 'Closed'}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="card">
+          <Icon name="phone" size={28} class="text-brand-red" />
+          <h2 class="mt-4 font-display text-h3">Contact</h2>
+          <p class="mt-2 text-body">
+            Phone: <a href={`tel:${CONTACT.phoneRaw}`} class="font-semibold text-brand-blue-dark hover:underline">{CONTACT.phone}</a>
+          </p>
+          <p class="mt-1 text-body">
+            Email: <a href={`mailto:${CONTACT.email}`} class="font-semibold text-brand-blue-dark hover:underline">{CONTACT.email}</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-xl border border-ink-100 shadow-soft-md">
+        <iframe
+          src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address.full)}&output=embed`}
+          title="Highland Primary Care location map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          style="border:0; width:100%; height:100%; min-height: 520px;"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITIES SERVED -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Service Area"
+        title="Serving the Texoma region"
+        lede="Patients travel from across Grayson County and surrounding areas for our care."
+        align="center"
+      />
+      <ul class="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-2">
+        {
+          communities.map((c) => (
+            <li class="rounded-full bg-paper-elevated px-4 py-2 text-meta font-medium text-ink-700 ring-1 ring-ink-100">
+              {c}, TX
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- LOCAL CONTEXT COPY -->
+  <section class="section">
+    <div class="container-x">
+      <div class="prose-medical mx-auto">
+        <h2>Your primary care home in Sherman, Texas</h2>
+        <p>
+          Highland Primary Care has been a fixture of the Sherman medical community for years. Our clinic, located inside the 300 N Highland Ave medical building, is just minutes from Wilson N. Jones Regional Medical Center, Texoma Medical Center, and the major Sherman residential neighborhoods.
+        </p>
+        <p>
+          We're easy to find: Highland Avenue runs north-south through Sherman, and we're located near the intersection with FM-1417. Free parking is available in the medical building lot. The building is fully accessible with elevator service to all floors.
+        </p>
+        <h3>Why patients across Texoma choose Highland</h3>
+        <ul>
+          <li><strong>Same-day appointments</strong> for acute illnesses and urgent concerns.</li>
+          <li><strong>On-site labs</strong> — most bloodwork done at your visit, no second trip.</li>
+          <li><strong>Most major insurance accepted</strong>, including Medicare and Medicaid.</li>
+          <li><strong>Board-certified physicians</strong> who take time to listen.</li>
+          <li><strong>One practice for the whole family</strong> — from chronic care to medical weight loss.</li>
+        </ul>
+        <h3>Getting here</h3>
+        <p>
+          From US-75: Take exit 60 (FM-1417) and head east. The medical building is at the corner of Highland Ave. From downtown Sherman: Travel north on Travis Street, then west on FM-1417. From Denison: Take US-75 South to exit 60.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSURANCE -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <InsuranceStrip />
+    </div>
+  </section>
+
+  <CTABanner />
+</BaseLayout>

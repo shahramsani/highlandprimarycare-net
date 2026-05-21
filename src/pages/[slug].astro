@@ -1,0 +1,273 @@
+---
+/**
+ * Single dynamic route handling top-level slugs:
+ *   - Provider bios (dr-shahram-sani, diane-keahey, dr-amit-warke)
+ *   - Service detail pages (9 services + semaglutide-pricing)
+ *
+ * Branches at render time on `kind` from getStaticPaths.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTABanner from '../components/CTABanner.astro';
+import FAQ from '../components/FAQ.astro';
+import BookingEmbed from '../components/BookingEmbed.astro';
+import Testimonial from '../components/Testimonial.astro';
+import Icon from '../components/Icon.astro';
+import { PROVIDERS, TESTIMONIALS, BOOKING, CONTACT } from '../config';
+import { SERVICE_CONTENT } from '../content/services';
+import {
+  physicianSchema,
+  faqSchema,
+  medicalServiceSchema,
+  breadcrumbSchema,
+} from '../schema';
+
+export function getStaticPaths() {
+  const providerPaths = PROVIDERS.map((p) => ({
+    params: { slug: p.slug },
+    props: { kind: 'provider' as const, provider: p },
+  }));
+  const servicePaths = Object.values(SERVICE_CONTENT).map((s) => ({
+    params: { slug: s.slug },
+    props: { kind: 'service' as const, content: s },
+  }));
+  return [...providerPaths, ...servicePaths];
+}
+
+const props = Astro.props as
+  | { kind: 'provider'; provider: (typeof PROVIDERS)[number] }
+  | { kind: 'service'; content: (typeof SERVICE_CONTENT)[string] };
+---
+
+{
+  props.kind === 'provider' && (
+    <BaseLayout
+      title={`${props.provider.name} — ${props.provider.title} | Highland Primary Care`}
+      description={props.provider.short}
+      schemaJson={[
+        physicianSchema(props.provider),
+        faqSchema([
+          {
+            q: `Is ${props.provider.name.split(',')[0]} accepting new patients?`,
+            a: `Yes. ${props.provider.name.split(',')[0]} is currently accepting new patients at Highland Primary Care in Sherman, TX. Call 903-871-5671 to schedule.`,
+          },
+          {
+            q: 'What insurance is accepted?',
+            a: 'Highland Primary Care accepts most major insurance plans including Medicare, Medicaid, Blue Cross Blue Shield, Aetna, Cigna, UnitedHealthcare, and more.',
+          },
+          {
+            q: 'Where is the practice located?',
+            a: '300 N Highland Ave, Suite 455, Sherman, TX 75092.',
+          },
+        ]),
+        breadcrumbSchema([
+          { name: 'Home', url: 'https://highlandprimarycare.net/' },
+          { name: 'About', url: 'https://highlandprimarycare.net/about-us/' },
+          {
+            name: props.provider.name,
+            url: `https://highlandprimarycare.net/${props.provider.slug}/`,
+          },
+        ]),
+      ]}
+    >
+      <section class="bg-paper">
+        <div class="container-x py-16 lg:py-22">
+          <div class="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+            <div class="aspect-[4/5] overflow-hidden rounded-2xl shadow-soft-lg">
+              <img
+                src={props.provider.photo}
+                alt={props.provider.name}
+                width="900"
+                height="1125"
+                fetchpriority="high"
+                class="h-full w-full object-cover object-top"
+              />
+            </div>
+            <div>
+              <span class="eyebrow">Our Providers</span>
+              <h1 class="mt-3 font-display text-display font-semibold text-ink-900 text-balance">
+                {props.provider.name}
+              </h1>
+              <p class="mt-3 text-lead font-semibold text-brand-blue-dark">
+                {props.provider.title}
+              </p>
+              <ul class="mt-6 flex flex-wrap gap-2">
+                {props.provider.specialties.map((s) => (
+                  <li class="rounded-full bg-brand-blue-soft px-3 py-1.5 text-meta font-medium text-brand-blue-dark">
+                    {s}
+                  </li>
+                ))}
+              </ul>
+              <p class="mt-6 max-w-xl text-body text-ink-700">{props.provider.short}</p>
+              <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href={BOOKING.general} class="btn-primary">
+                  <Icon name="calendar" size={18} />
+                  Schedule with {props.provider.name.split(',')[0]}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tinted">
+        <div class="container-x">
+          <SectionHeader
+            eyebrow="Areas of Expertise"
+            title="Comprehensive, personalized care"
+            align="center"
+          />
+          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {props.provider.specialties.map((s) => (
+              <div class="card">
+                <Icon name="check-circle" size={24} class="text-brand-red" />
+                <h3 class="mt-4 font-display text-h4 text-ink-900">{s}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container-x">
+          <SectionHeader eyebrow="Patient Voices" title="What patients say" align="center" />
+          <div class="mt-12 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <Testimonial {...t} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CTABanner />
+    </BaseLayout>
+  )
+}
+
+{
+  props.kind === 'service' && (
+    <BaseLayout
+      title={props.content.metaTitle}
+      description={props.content.metaDescription}
+      schemaJson={[
+        medicalServiceSchema({
+          name: props.content.title,
+          description: props.content.metaDescription,
+          slug: props.content.slug,
+        }),
+        faqSchema(props.content.faqs),
+        breadcrumbSchema([
+          { name: 'Home', url: 'https://highlandprimarycare.net/' },
+          { name: 'Services', url: 'https://highlandprimarycare.net/our-services/' },
+          {
+            name: props.content.title,
+            url: `https://highlandprimarycare.net/${props.content.slug}/`,
+          },
+        ]),
+      ]}
+    >
+      <section class="relative overflow-hidden bg-paper">
+        <div class="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand-blue-soft/60 blur-3xl" />
+        <div class="container-x relative py-16 lg:py-22">
+          <div class="max-w-3xl">
+            <span class="eyebrow">{props.content.eyebrow}</span>
+            <h1 class="mt-4 font-display text-display font-semibold text-ink-900 text-balance">
+              {props.content.hero}
+            </h1>
+            <p class="mt-4 text-lead text-ink-500 text-pretty">{props.content.lede}</p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={BOOKING.general} class="btn-primary">
+                <Icon name="calendar" size={18} />
+                Schedule Your Visit
+              </a>
+              <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
+                <Icon name="phone" size={18} />
+                {CONTACT.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {props.content.intro.length > 0 && (
+        <section class="section">
+          <div class="container-x">
+            <div class="prose-medical mx-auto">
+              {props.content.intro.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section class="section section-tinted">
+        <div class="container-x">
+          <SectionHeader
+            eyebrow="What We Offer"
+            title={`${props.content.title} — what's included`}
+            align="center"
+          />
+          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {props.content.capabilities.map((cap) => (
+              <div class="card">
+                <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-brand-blue-soft text-brand-blue-dark">
+                  <Icon name={cap.icon as any} size={24} />
+                </span>
+                <h3 class="mt-4 font-display text-h4 text-ink-900">{cap.title}</h3>
+                <p class="mt-2 text-body text-ink-500">{cap.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {props.content.evidence && (
+        <section class="section">
+          <div class="container-x">
+            <div class="mx-auto max-w-3xl rounded-xl border-l-4 border-brand-blue bg-brand-blue-soft p-8">
+              <p class="eyebrow text-brand-blue-dark">Evidence-Based Care</p>
+              <p class="mt-3 text-body text-ink-700">{props.content.evidence.lede}</p>
+              <ul class="mt-4 space-y-2">
+                {props.content.evidence.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener"
+                      class="inline-flex items-center gap-1.5 text-meta font-semibold text-brand-blue-dark hover:text-brand-blue"
+                    >
+                      {link.label}
+                      <Icon name="arrow-up-right" size={14} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section class="section section-tinted">
+        <div class="container-x">
+          <SectionHeader eyebrow="FAQ" title="Frequently asked questions" align="center" />
+          <div class="mx-auto mt-12 max-w-3xl">
+            <FAQ faqs={props.content.faqs} />
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container-x">
+          <SectionHeader eyebrow="Get Started" title="Schedule your visit" align="center" />
+          <div class="mx-auto mt-12 max-w-3xl">
+            <BookingEmbed src={BOOKING.general} />
+          </div>
+        </div>
+      </section>
+
+      <CTABanner />
+    </BaseLayout>
+  )
+}

@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTABanner from '../../components/CTABanner.astro';
+import Icon from '../../components/Icon.astro';
+import { ARTICLES } from '../../content/articles';
+import { SITE } from '../../config';
+import { breadcrumbSchema } from '../../schema';
+
+export function getStaticPaths() {
+  return ARTICLES.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.title,
+  description: article.description,
+  datePublished: article.date,
+  author: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo.png` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE.url}/health-articles/${article.slug}/` },
+};
+
+const breadcrumb = breadcrumbSchema([
+  { name: 'Home', url: 'https://highlandprimarycare.net/' },
+  { name: 'Health Articles', url: 'https://highlandprimarycare.net/health-articles/' },
+  { name: article.title, url: `https://highlandprimarycare.net/health-articles/${article.slug}/` },
+]);
+---
+
+<BaseLayout
+  title={`${article.title} — Highland Primary Care`}
+  description={article.description}
+  schemaJson={[articleSchema, breadcrumb]}
+>
+  <article class="section">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="mb-8 text-meta text-ink-500">
+        <a href="/" class="hover:text-brand-blue">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/health-articles/" class="hover:text-brand-blue">Health Articles</a>
+        <span class="mx-2">/</span>
+        <span class="text-ink-700">{article.title}</span>
+      </nav>
+
+      <header class="mx-auto max-w-3xl">
+        <span class="eyebrow">
+          {new Date(article.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          {' · '}
+          {article.readingMinutes} min read
+        </span>
+        <h1 class="mt-4 font-display text-display font-semibold text-ink-900 text-balance">
+          {article.title}
+        </h1>
+        <p class="mt-4 text-lead text-ink-500 text-pretty">{article.description}</p>
+      </header>
+
+      <div class="prose-medical mx-auto mt-12" set:html={article.body}></div>
+
+      <div class="mx-auto mt-16 max-w-3xl border-t border-ink-100 pt-8">
+        <a
+          href="/health-articles/"
+          class="inline-flex items-center gap-1.5 font-semibold text-brand-blue-dark hover:text-brand-blue"
+        >
+          <Icon name="arrow-right" size={18} class="rotate-180" />
+          All articles
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <CTABanner />
+</BaseLayout>

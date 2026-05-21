@@ -1,0 +1,76 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  short: string;
+  href: string;
+  icon: string;
+  featured?: boolean;
+}
+const { title, short, href, icon, featured = false } = Astro.props;
+
+// Map our service slugs/labels to Icon names
+const iconMap: Record<string, string> = {
+  HeartPulse: 'heart-pulse',
+  Activity: 'activity',
+  Bandage: 'bandage',
+  Brain: 'brain',
+  Scale: 'scale',
+  Accessibility: 'accessibility',
+  User: 'user',
+  Apple: 'apple',
+  Route: 'route',
+  Zap: 'zap',
+};
+const iconName = iconMap[icon] ?? 'stethoscope';
+---
+
+<a
+  href={href}
+  class:list={[
+    'group block rounded-xl border p-6 transition-all duration-200 ease-out-quart',
+    featured
+      ? 'border-brand-red bg-brand-red-soft hover:bg-brand-red hover:border-brand-red'
+      : 'border-ink-100 bg-paper-elevated hover:border-brand-blue hover:shadow-soft-lg hover:-translate-y-0.5',
+  ]}
+>
+  <div
+    class:list={[
+      'inline-flex h-12 w-12 items-center justify-center rounded-lg',
+      featured
+        ? 'bg-white text-brand-red group-hover:bg-brand-red-soft'
+        : 'bg-brand-blue-soft text-brand-blue-dark',
+    ]}
+  >
+    <Icon name={iconName as any} size={24} />
+  </div>
+
+  <h3
+    class:list={[
+      'mt-5 font-display text-h4 font-semibold',
+      featured ? 'text-brand-red-dark group-hover:text-white' : 'text-ink-900',
+    ]}
+  >
+    {title}
+  </h3>
+
+  <p
+    class:list={[
+      'mt-2 text-body',
+      featured ? 'text-brand-red-dark group-hover:text-white/95' : 'text-ink-500',
+    ]}
+  >
+    {short}
+  </p>
+
+  <span
+    class:list={[
+      'mt-5 inline-flex items-center gap-1.5 text-meta font-semibold',
+      featured ? 'text-brand-red-dark group-hover:text-white' : 'text-brand-blue-dark',
+    ]}
+  >
+    Learn more
+    <Icon name="arrow-right" size={16} class="transition-transform group-hover:translate-x-0.5" />
+  </span>
+</a>

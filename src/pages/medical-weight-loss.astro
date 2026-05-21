@@ -1,0 +1,420 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTABanner from '../components/CTABanner.astro';
+import FAQ from '../components/FAQ.astro';
+import BookingEmbed from '../components/BookingEmbed.astro';
+import Testimonial from '../components/Testimonial.astro';
+import Icon from '../components/Icon.astro';
+import { BOOKING, CONTACT, PROVIDERS } from '../config';
+import { faqSchema, medicalServiceSchema } from '../schema';
+
+const faqs = [
+  {
+    q: 'Who is a candidate for the program?',
+    a: 'Adults seeking medically supervised weight management who haven\u2019t achieved their goals through diet and exercise alone may be candidates. Eligibility is determined during your medical evaluation based on BMI, health history, current medications, and clinical factors. Not all patients are candidates for medication-assisted treatment.',
+  },
+  {
+    q: 'Why weekly in-clinic visits instead of mail-order?',
+    a: 'Weight loss medications are powerful prescription drugs that benefit from real medical supervision. Weekly in-clinic visits let your physician monitor progress, manage side effects, adjust dosing, and ensure safety. Mail-order services check in by text, if at all.',
+  },
+  {
+    q: 'What happens at each weekly visit?',
+    a: 'Each weekly visit is brief — nurse-administered dose, vitals, brief check-in, and physician access if you have questions. Most visits take 15–20 minutes.',
+  },
+  {
+    q: 'What medications might be prescribed?',
+    a: 'Your physician will determine the most appropriate FDA-approved or compounded weight loss medication for you based on your medical evaluation. Specific medication, dose, and treatment approach are discussed during your consultation. We only source through legitimate, regulated pharmacies.',
+  },
+  {
+    q: 'Is this covered by insurance?',
+    a: 'The medical weight loss program is offered as a cash-pay program with transparent monthly pricing. Office visits and related lab work may be billable to insurance — we\u2019ll discuss specifics during your consultation.',
+  },
+  {
+    q: 'How quickly will I see results?',
+    a: 'Most patients begin noticing reduced appetite within the first 1–2 weeks. Meaningful weight loss typically becomes visible by week 4–8. Clinical trials show average total body weight loss of 15–22% over 68–72 weeks for semaglutide and tirzepatide, though individual results vary.',
+  },
+];
+
+const pricingTiers = [
+  {
+    name: 'Semaglutide · Starter',
+    dose: '0.25 – 0.5 mg / week',
+    price: '$99',
+    features: [
+      'Nurse-administered weekly injection',
+      'Ideal for starting or sensitive patients',
+      'Monthly provider visit billed to insurance',
+      'Labs billed to insurance',
+    ],
+  },
+  {
+    name: 'Semaglutide · Therapeutic',
+    dose: '1.0 – 2.4 mg / week',
+    price: '$149',
+    features: [
+      'Full therapeutic dose range',
+      'Maximum semaglutide efficacy tier',
+      'Monthly provider visit billed to insurance',
+      'Labs billed to insurance',
+    ],
+    featured: true,
+  },
+  {
+    name: 'Tirzepatide · Starter',
+    dose: '2.5 – 5 mg / week',
+    price: '$199',
+    features: [
+      'Dual-agonist (GLP-1 + GIP)',
+      'Higher average weight loss vs semaglutide',
+      'Monthly provider visit billed to insurance',
+      'Labs billed to insurance',
+    ],
+  },
+  {
+    name: 'Tirzepatide · Therapeutic',
+    dose: '7.5 – 15 mg / week',
+    price: '$299',
+    features: [
+      'Full therapeutic dose range',
+      'Maximum tirzepatide efficacy tier',
+      'Monthly provider visit billed to insurance',
+      'Labs billed to insurance',
+    ],
+  },
+];
+
+const sani = PROVIDERS[0];
+---
+
+<BaseLayout
+  title="Medical Weight Loss Sherman TX — Highland Primary Care"
+  description="Physician-supervised medical weight loss in Sherman, TX. GLP-1 program from $99/month. Weekly in-clinic visits. Real medical care, not mail-order."
+  schemaJson={[
+    medicalServiceSchema({
+      name: 'Medical Weight Loss Program',
+      description:
+        'Physician-supervised medical weight loss using FDA-approved and compounded GLP-1 medications. Weekly nurse-administered injections and monthly provider visits.',
+      slug: 'medical-weight-loss',
+    }),
+    faqSchema(faqs),
+  ]}
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-paper">
+    <div class="pointer-events-none absolute -right-32 -top-32 h-[26rem] w-[26rem] rounded-full bg-brand-red-soft/60 blur-3xl"></div>
+    <div class="container-x relative py-16 lg:py-22">
+      <div class="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div class="animate-fade-up">
+          <span class="eyebrow">Medical Weight Loss · Sherman, TX</span>
+          <h1 class="mt-4 font-display text-display font-semibold text-ink-900 text-balance">
+            Weight loss isn't a willpower problem.<br />
+            It's <span class="italic text-brand-red">a hormone problem.</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-lead text-ink-500 text-pretty">
+            GLP-1 medications restore the biological signals that control hunger. Weekly nurse-administered injections under real physician oversight — not a shipping box.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href={BOOKING.weightLoss} class="btn-primary">
+              <Icon name="calendar" size={18} />
+              Book Consultation
+            </a>
+            <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
+              <Icon name="phone" size={18} />
+              Call {CONTACT.phone}
+            </a>
+          </div>
+          <div class="mt-10 grid grid-cols-3 gap-6 border-t border-ink-100 pt-6">
+            <div>
+              <p class="font-display text-h2 text-brand-red">15–22%</p>
+              <p class="mt-1 text-meta text-ink-500">Avg. body weight lost in clinical trials*</p>
+            </div>
+            <div>
+              <p class="font-display text-h2 text-brand-red">$99</p>
+              <p class="mt-1 text-meta text-ink-500">Starting monthly medication cost</p>
+            </div>
+            <div>
+              <p class="font-display text-h2 text-brand-red">Weekly</p>
+              <p class="mt-1 text-meta text-ink-500">In-clinic nurse injection visits</p>
+            </div>
+          </div>
+          <p class="mt-4 text-meta text-ink-300">
+            *Based on clinical trial data for semaglutide and tirzepatide. Individual results vary.
+          </p>
+        </div>
+
+        <div class="relative">
+          <div class="card border-2 border-brand-red bg-paper-elevated">
+            <p class="eyebrow text-brand-red-dark">Physician-Supervised Program</p>
+            <h2 class="mt-3 font-display text-h2 text-ink-900">What's included</h2>
+            <ul class="mt-6 space-y-3">
+              {
+                [
+                  'Initial physician consultation & evaluation',
+                  'Lab work and full medical assessment',
+                  'FDA-compliant 503A compounded medications',
+                  'Weekly in-clinic nurse-administered injections',
+                  'Monthly provider visits billed to insurance',
+                  'Direct physician oversight by Dr. Sani, MD',
+                ].map((feat) => (
+                  <li class="flex gap-3">
+                    <Icon name="check-circle" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+                    <span class="text-body text-ink-700">{feat}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SCIENCE -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="The Science"
+        title="Your body has been fighting you — and winning."
+        lede="Decades of dieting fail not because you lack discipline, but because they don't address the underlying biology. Obesity is a chronic hormonal condition. It requires a medical solution."
+        align="center"
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {
+          [
+            {
+              n: '01',
+              title: 'Your hunger hormones are dysregulated',
+              body: 'GLP-1 and GIP signaling are blunted in people with obesity, causing persistent hunger even when caloric needs are met. No amount of willpower overrides a broken hormonal signal.',
+            },
+            {
+              n: '02',
+              title: 'Semaglutide & tirzepatide restore the signal',
+              body: 'These medications act on the same receptors your body uses to sense fullness — reducing hunger, slowing gastric emptying, and improving insulin sensitivity.',
+            },
+            {
+              n: '03',
+              title: 'Clinical results are real',
+              body: 'In randomized controlled trials, participants lost an average of 15–22% of total body weight over 68–72 weeks — 3–4× more than any previous medication class.',
+            },
+          ].map((step) => (
+            <div class="card">
+              <span class="font-display text-h2 text-brand-red">{step.n}</span>
+              <h3 class="mt-3 font-display text-h3 text-ink-900">{step.title}</h3>
+              <p class="mt-3 text-body text-ink-500">{step.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PROCESS -->
+  <section class="section">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="The Process"
+        title="Simple, supervised, and done right."
+        align="center"
+      />
+      <ol class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            { title: 'New Patient Consult', body: 'One-time in-person visit with Dr. Sani. Health history, medications, and goals reviewed. Baseline labs ordered through insurance. $99 one-time fee.' },
+            { title: 'Your Plan Is Set', body: 'Dr. Sani prescribes your starting dose from a licensed Texas 503A compounding pharmacy. We handle paperwork and insurance verification for visit billing.' },
+            { title: 'Weekly In-Clinic Injections', body: 'Every week, come in for a nurse-administered injection. No syringes at home, no guesswork. Your nurse tracks progress and manages side effects.' },
+            { title: 'Ongoing Medical Management', body: 'Monthly provider visits (billed to insurance) for dose adjustments, lab review, and optimization. Real medical management — not a pill-mill.' },
+          ].map((s, i) => (
+            <li class="card relative">
+              <span class="absolute -top-3 left-6 inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-red text-meta font-bold text-white">
+                {i + 1}
+              </span>
+              <h3 class="mt-2 font-display text-h4 text-ink-900">{s.title}</h3>
+              <p class="mt-2 text-meta text-ink-500">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- WHY US VS TELEHEALTH -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Why Choose Us"
+        title="You deserve more than a shipping box."
+        lede="Telehealth weight-loss companies mail you medication and leave you alone. We're a local medical practice — we see you weekly, bill your insurance, and actually manage your care."
+        align="center"
+      />
+      <div class="mt-12 grid gap-6 lg:grid-cols-2">
+        <div class="card border-brand-blue">
+          <p class="eyebrow text-brand-blue-dark">Highland Primary Care</p>
+          <h3 class="mt-2 font-display text-h3 text-ink-900">In-Person Medical Weight Loss</h3>
+          <ul class="mt-6 space-y-3">
+            {
+              [
+                'Weekly nurse-administered injection visit',
+                'Insurance billed for all office visits',
+                'Monthly exam by Dr. Sani, MD',
+                'Labs billed to insurance under obesity diagnosis',
+                'Local accountability — we know your name',
+                'Dose adjustments based on in-person assessment',
+                'Starting at $99/month medication cost',
+              ].map((f) => (
+                <li class="flex gap-3 text-body text-ink-700">
+                  <Icon name="check-circle" size={20} class="mt-0.5 shrink-0 text-brand-blue-dark" />
+                  {f}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="card opacity-80">
+          <p class="eyebrow text-ink-500">Telehealth (Ro, Hims, Noom Med)</p>
+          <h3 class="mt-2 font-display text-h3 text-ink-700">Online-Only Programs</h3>
+          <ul class="mt-6 space-y-3">
+            {
+              [
+                'Medication mailed — you inject yourself',
+                'No insurance billing for visits',
+                'Async messaging, not real provider visits',
+                'Labs self-paid or not included',
+                'No local presence or continuity of care',
+                'Dose changes by algorithm or chat',
+                '$149–$349/month with no visit credit',
+              ].map((f) => (
+                <li class="flex gap-3 text-body text-ink-500">
+                  <Icon name="x" size={20} class="mt-0.5 shrink-0 text-ink-300" />
+                  {f}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Plans & Pricing"
+        title="Transparent pricing. No surprises."
+        lede="Monthly medication cost shown. Insurance may cover office visits and labs separately."
+        align="center"
+      />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          pricingTiers.map((tier) => (
+            <div
+              class:list={[
+                'rounded-xl border p-6',
+                tier.featured ? 'border-brand-red bg-brand-red-soft' : 'border-ink-100 bg-paper-elevated',
+              ]}
+            >
+              {tier.featured && (
+                <span class="inline-block rounded-full bg-brand-red px-3 py-0.5 text-eyebrow font-semibold uppercase tracking-wider text-white">
+                  Most Popular
+                </span>
+              )}
+              <h3 class="mt-3 font-display text-h4 text-ink-900">{tier.name}</h3>
+              <p class="mt-1 text-meta text-ink-500">{tier.dose}</p>
+              <p class="mt-4 font-display text-h1 text-ink-900">{tier.price}<span class="text-h4 text-ink-500">/mo</span></p>
+              <p class="text-meta text-ink-500">4 weekly injections included</p>
+              <ul class="mt-5 space-y-2">
+                {
+                  tier.features.map((f) => (
+                    <li class="flex gap-2 text-meta text-ink-700">
+                      <Icon name="check" size={16} class="mt-0.5 shrink-0 text-brand-red" />
+                      {f}
+                    </li>
+                  ))
+                }
+              </ul>
+              <a
+                href={BOOKING.weightLoss}
+                class:list={['btn mt-6 w-full', tier.featured ? 'bg-brand-red text-white hover:bg-brand-red-dark' : 'btn-secondary']}
+              >
+                Get Started
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET YOUR PHYSICIAN -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl">
+          <img
+            src={sani.photo}
+            alt={sani.name}
+            width="800"
+            height="1000"
+            loading="lazy"
+            class="h-full w-full object-cover object-top"
+          />
+        </div>
+        <div>
+          <SectionHeader
+            eyebrow="Meet Your Physician"
+            title="Care led by a board-certified internal medicine physician — not an algorithm."
+          />
+          <p class="mt-6 text-body text-ink-700">{sani.short}</p>
+          <ul class="mt-6 flex flex-wrap gap-2">
+            {
+              sani.specialties.map((s) => (
+                <li class="rounded-full bg-paper-elevated px-3 py-1.5 text-meta font-medium text-brand-blue-dark ring-1 ring-ink-100">
+                  {s}
+                </li>
+              ))
+            }
+          </ul>
+          <a href={`/${sani.slug}/`} class="mt-8 inline-flex items-center gap-2 font-semibold text-brand-blue-dark hover:text-brand-blue">
+            Read Dr. Sani's full bio
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="FAQ"
+        title="Frequently asked questions"
+        align="center"
+      />
+      <div class="mx-auto mt-12 max-w-3xl">
+        <FAQ faqs={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="section bg-paper-tinted">
+    <div class="container-x">
+      <SectionHeader
+        eyebrow="Get Started"
+        title="Book your consultation"
+        align="center"
+      />
+      <div class="mx-auto mt-12 max-w-3xl">
+        <BookingEmbed src={BOOKING.weightLoss} />
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Stop fighting your biology."
+    subtitle="Schedule your weight loss consultation with Dr. Sani today."
+    bookingUrl={BOOKING.weightLoss}
+  />
+</BaseLayout>

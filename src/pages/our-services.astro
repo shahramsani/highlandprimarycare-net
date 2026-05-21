@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTABanner from '../components/CTABanner.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Icon from '../components/Icon.astro';
+import { SERVICES } from '../config';
+import { localBusinessSchema } from '../schema';
+---
+
+<BaseLayout
+  title="Primary Care Services Sherman TX — Highland Primary Care"
+  description="Comprehensive primary care services in Sherman, TX. From preventive care to medical weight loss, TRT, and chronic disease management."
+  schemaJson={localBusinessSchema()}
+>
+  <section class="bg-paper">
+    <div class="container-x py-16 lg:py-22">
+      <SectionHeader
+        as="h1"
+        eyebrow="Our Services"
+        title="Comprehensive primary care for the whole family"
+        lede="From routine check-ups to specialized medical weight loss and hormone optimization, we cover the full spectrum of primary care under one roof."
+        align="center"
+      />
+    </div>
+  </section>
+
+  <section class="pb-16">
+    <div class="container-x">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          SERVICES.map((s) => (
+            <ServiceCard
+              title={s.title}
+              short={s.short}
+              href={`/${s.slug}/`}
+              icon={s.icon}
+              featured={s.featured}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABanner />
+</BaseLayout>
