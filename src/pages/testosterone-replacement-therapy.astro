@@ -6,33 +6,43 @@ import FAQ from '../components/FAQ.astro';
 import BookingEmbed from '../components/BookingEmbed.astro';
 import Testimonial from '../components/Testimonial.astro';
 import Icon from '../components/Icon.astro';
-import { BOOKING, CONTACT } from '../config';
-import { faqSchema, medicalServiceSchema } from '../schema';
+import Reveal from '../components/Reveal.astro';
+import AnimatedStat from '../components/AnimatedStat.astro';
+import Marquee from '../components/Marquee.astro';
+import Parallax from '../components/Parallax.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import { BOOKING, CONTACT, SITE } from '../config';
+import { medicalServiceSchema, faqSchema, breadcrumbSchema } from '../schema';
 
 const faqs = [
   {
-    q: 'What is testosterone replacement therapy (TRT)?',
-    a: 'TRT is a medical treatment that replaces testosterone your body isn\u2019t producing adequately. It\u2019s FDA-approved and has been used safely for over 75 years to treat low testosterone (hypogonadism). Treatment typically involves weekly self-injections of pharmaceutical-grade testosterone.',
+    q: 'Am I a candidate for TRT?',
+    a: 'Candidates for testosterone replacement therapy are typically men with symptoms of low testosterone (fatigue, low libido, brain fog, loss of muscle mass, depressed mood) combined with two morning serum testosterone measurements below 300 ng/dL — the threshold endorsed by the American Urological Association. Your $79 assessment includes total testosterone (TT), free testosterone (FT), SHBG, estradiol (E2), LH, FSH, PSA, CBC, and a comprehensive metabolic panel so we can confirm a true clinical diagnosis before recommending treatment.',
   },
   {
-    q: 'Is TRT safe?',
-    a: 'When properly monitored by qualified medical professionals, TRT is very safe. We monitor your labs every 3 months and adjust your dosage as needed. Side effects are rare and manageable. Our physicians have 15+ years of experience in hormone optimization.',
+    q: 'Will TRT make me infertile?',
+    a: 'Exogenous testosterone suppresses LH and FSH signaling from the pituitary, which can significantly reduce sperm production while on therapy. If fertility is a current or future priority, we discuss this before starting. We can preserve testicular function and spermatogenesis using concurrent hCG (or, in select cases, alternatives like clomiphene) — and we will refer for sperm banking if appropriate. This is one of many reasons TRT belongs in a physician-supervised setting.',
   },
   {
-    q: 'How much does treatment cost?',
-    a: 'Monthly programs range from $179 to $399 depending on tier. The initial comprehensive assessment is $79 (a $350+ value). Pricing includes medication, labs, provider visits, and support. HSA/FSA accepted.',
+    q: 'What about cardiovascular risk?',
+    a: 'The 2023 TRAVERSE trial — a randomized placebo-controlled study of over 5,200 men — found that TRT in symptomatic, hypogonadal men with elevated cardiovascular risk did not increase major adverse cardiac events compared to placebo. That said, TRT can raise hematocrit (polycythemia), which is why we monitor CBC at baseline, 3 months, 6 months, and annually. We also screen for sleep apnea, manage blood pressure, and adjust dosing or schedule therapeutic phlebotomy if hematocrit exceeds 54%.',
   },
   {
-    q: 'Do you accept insurance?',
-    a: 'We operate on a direct-pay model which actually works in your favor — better medications, faster service, unlimited provider access without insurance hassles. HSA/FSA accepted and we provide superbills for potential reimbursement.',
+    q: 'How is TRT administered?',
+    a: 'Our preferred protocol is intramuscular or subcutaneous testosterone cypionate, dosed weekly (or twice-weekly for steadier serum levels and less estradiol conversion). Weekly dosing produces more stable trough-to-peak levels than the older every-two-weeks regimen and minimizes the mood and energy "roller coaster" many men experience on biweekly schedules. We train you to self-inject at home, or you can come into the clinic.',
   },
   {
-    q: 'How long until I see results?',
-    a: 'Most men notice improvements in energy and mood within 2–3 weeks. Physical changes (muscle gain, fat loss) typically occur within 2–3 months. Full optimization can take 6–12 months. Results vary by individual.',
+    q: 'Are gels, patches, or pellets an option?',
+    a: 'Yes — but they are not our first-line recommendation for most men. Topical gels (AndroGel, Testim) carry a transference risk to women and children in the household, and absorption is variable. Patches frequently cause skin irritation. Pellets require a minor in-office procedure every 3–6 months and dosing cannot be adjusted once implanted. Injectable cypionate is the most cost-effective, most adjustable, and most consistently effective route — which is why it remains the standard of care.',
   },
   {
-    q: 'Can I use my HSA or FSA?',
-    a: 'Yes. TRT is a qualified medical expense. We accept HSA/FSA payments and provide all documentation needed for reimbursement.',
+    q: 'Do you check estradiol (E2)?',
+    a: 'Yes, every visit. Testosterone aromatizes to estradiol, and both extremes — too high (gynecomastia, water retention, mood swings) or too low (joint pain, low libido, poor lipids, fragile bones) — cause symptoms. Most men do not need an aromatase inhibitor (anastrozole). When E2 is genuinely elevated and symptomatic, we use the lowest effective dose. Crash-low E2 is one of the most common preventable mistakes in TRT, and we work hard to avoid it.',
+  },
+  {
+    q: 'Can I stop TRT without consequences?',
+    a: 'Yes, you can discontinue TRT — but your body will return to its pre-treatment hormonal baseline, typically within 4–8 weeks. The symptoms that brought you in (fatigue, low libido, brain fog) will likely return. For men who want to come off therapy and restart their own production, we can run a structured restart protocol using hCG and a selective estrogen receptor modulator (SERM) such as clomiphene or tamoxifen. This is another reason to choose a physician-supervised practice over an online "mens-clinic" subscription.',
   },
 ];
 
@@ -40,348 +50,497 @@ const tiers = [
   {
     name: 'Testosterone Essentials',
     price: 199,
-    daily: '$6.63 per day',
-    tagline: 'Quality TRT without extras',
+    tagline: 'Best for: independent men comfortable self-administering at home',
+    featured: false,
     features: [
-      'Pharmaceutical-grade testosterone (injectable)',
-      'All injection supplies',
-      'Unlimited messaging with your provider',
-      'Quarterly lab monitoring (4×/yr)',
-      'Quarterly telehealth check-ins',
-      'Injection training and ongoing support',
-      '24/7 patient portal access',
+      'Weekly self-injection at home',
+      'Pharmaceutical testosterone cypionate (IM)',
+      'All injection supplies + injection training',
+      'Monthly check-in with your physician',
+      'Basic labs (TT, FT, E2, CBC, PSA)',
+      'Unlimited messaging through patient portal',
     ],
   },
   {
-    name: 'Complete Optimization',
+    name: 'Complete Hormone Optimization',
     price: 299,
-    daily: '$9.97 per day',
-    tagline: 'Complete hormonal optimization',
-    features: [
-      'Everything in Essentials, plus:',
-      'HCG (maintains natural T production and fertility)',
-      'Estrogen blocker if needed',
-      'Monthly provider check-ins',
-      'Priority lab processing',
-      'Priority appointment scheduling',
-      'Nutrition and exercise optimization guide',
-      '20% discount on additional services',
-    ],
+    tagline: 'Best for: men who want full-spectrum hormone balance, not just T',
     featured: true,
+    features: [
+      'Weekly in-clinic injection (or home option)',
+      'Testosterone + estradiol management + DHEA',
+      'hCG add-on available for fertility preservation',
+      'Quarterly DEXA body-composition scan',
+      'Full bloodwork every 90 days',
+      'Priority scheduling and same-week labs',
+      'Aromatase inhibitor titration if indicated',
+    ],
   },
   {
     name: 'Executive Performance',
     price: 499,
-    daily: '$16.63 per day',
-    tagline: 'Concierge-level care',
+    tagline: 'Best for: high performers who need concierge-level precision',
+    featured: false,
     features: [
-      'Everything in Complete, plus:',
-      'Premium peptide therapy (BPC-157, Ipamorelin, or CJC-1295)',
-      'Bi-weekly provider check-ins',
-      'Advanced labs (thyroid, vitamin D, inflammation)',
-      'Dedicated care coordinator',
-      'Quarterly body composition analysis',
-      'Annual executive wellness assessment',
-      '30% discount on additional services',
+      'Concierge injection timing + dosing strategy',
+      'Advanced labs: TT, FT, SHBG, E2, LH, FSH, PSA',
+      'Thyroid panel + micronutrient (B12, D, ferritin, zinc)',
+      'Quarterly body-composition + VO2 estimate',
+      'Cardiometabolic deep dive (ApoB, Lp(a), hs-CRP)',
+      'Peptide adjuncts available (BPC-157, ipamorelin)',
+      'Direct physician access via secure messaging',
     ],
   },
 ];
 
-const testimonials = [
+const symptomChips = [
+  { icon: 'zap', label: 'Low energy' },
+  { icon: 'brain', label: 'Brain fog' },
+  { icon: 'heart-pulse', label: 'Low libido' },
+  { icon: 'scale', label: 'Stubborn fat' },
+];
+
+const steps = [
   {
-    quote: "I was skeptical at first, but within 3 weeks I started feeling like my old self again. Energy is back, sleeping better, and I've lost 12 pounds without trying. The team actually cares — they remember my name.",
-    name: 'Mike R., Age 47',
+    num: '01',
+    icon: 'calendar',
+    title: 'Book your $79 assessment',
+    body: 'Sixty seconds online or one phone call. Choose a morning slot — testosterone is highest in the AM, which is when guidelines recommend drawing labs.',
+  },
+  {
+    num: '02',
+    icon: 'flask',
+    title: 'Comprehensive labs + exam',
+    body: 'On-site bloodwork: TT, FT, SHBG, E2, LH, FSH, PSA, CBC, CMP, lipid panel. Plus a thorough history and physical with a board-certified physician — no rushed 7-minute slots.',
+  },
+  {
+    num: '03',
+    icon: 'list-checks',
+    title: 'Personalized protocol',
+    body: 'We sit down with your numbers, explain what they mean in plain English, and build a treatment plan around your goals, fertility status, and cardiometabolic risk. No algorithms. No copy-paste.',
+  },
+];
+
+const trtTestimonials = [
+  {
+    quote: "Three weeks in and the brain fog lifted. I'd been telling myself for years it was just age — turns out my total T was 218. Dr. Sani caught it, explained the bloodwork in plain English, and now I actually want to go to the gym after work.",
+    name: 'Michael R., 47',
     city: 'Sherman, TX',
   },
   {
-    quote: 'After years of feeling run down, I finally did something about it. Best decision I\u2019ve made in a decade. I have energy to keep up with my grandkids now.',
-    name: 'James T., Age 52',
+    quote: "I'd looked at the online clinics. They wanted my credit card before they'd even talk to me. Highland did real labs, a real physical, and a real conversation. The protocol they built is dialed in — my E2 is finally where it should be.",
+    name: 'James D., 52',
     city: 'Denison, TX',
   },
   {
-    quote: 'I drive right past the clinic on my way to work, so it\u2019s super convenient. Telehealth follow-ups, medication delivered to my house, and the price is actually affordable.',
-    name: 'David K., Age 41',
-    city: 'Sherman, TX',
+    quote: "What sold me was that they checked PSA and hematocrit every quarter. My buddy at another place hasn't had labs in a year. This is medicine, not a subscription box. Energy is back, sleep is better, my wife noticed before I did.",
+    name: 'David P., 41',
+    city: 'Pottsboro, TX',
   },
 ];
+
+const breadcrumb = breadcrumbSchema([
+  { name: 'Home', url: `${SITE.url}/` },
+  { name: 'Services', url: `${SITE.url}/our-services/` },
+  { name: 'Testosterone Replacement Therapy', url: `${SITE.url}/testosterone-replacement-therapy/` },
+]);
 ---
 
 <BaseLayout
-  title="Testosterone Replacement Therapy Sherman TX — Highland Primary Care"
-  description="Doctor-supervised TRT in Sherman, TX. $79 comprehensive assessment. Texas-licensed physicians. HIPAA-compliant. Restore energy and vitality."
+  title="Testosterone Replacement Therapy (TRT) Sherman TX | $79 Assessment | Highland Primary Care"
+  description="Physician-supervised TRT in Sherman, TX. $79 comprehensive hormone assessment with full labs (TT, FT, SHBG, E2, PSA). Board-certified Internal Medicine. Evidence-based protocols."
   schemaJson={[
     medicalServiceSchema({
       name: 'Testosterone Replacement Therapy',
       description:
-        'Physician-supervised hormone replacement therapy for men with clinically low testosterone. Comprehensive labs, evidence-based protocols, and ongoing optimization.',
+        'Physician-supervised testosterone replacement therapy for men with clinically low testosterone. Comprehensive labs (TT, FT, SHBG, E2, LH, FSH, PSA), evidence-based protocols, and ongoing optimization by a board-certified Internal Medicine physician in Sherman, TX.',
       slug: 'testosterone-replacement-therapy',
     }),
     faqSchema(faqs),
+    breadcrumb,
   ]}
 >
-  <!-- HERO -->
-  <section class="relative overflow-hidden bg-surface-dark text-white">
-    <div class="pointer-events-none absolute -right-32 -top-20 h-[28rem] w-[28rem] rounded-full bg-brand-red/20 blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-40 left-1/3 h-[24rem] w-[24rem] rounded-full bg-brand-blue/20 blur-3xl"></div>
+  <ScrollProgress />
 
-    <div class="container-x relative py-16 lg:py-22">
-      <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-        <div class="animate-fade-up">
-          <span class="eyebrow text-brand-red-soft">TRT · Sherman, TX</span>
-          <h1 class="mt-4 font-display text-display font-semibold text-white text-balance">
-            Are you tired of<br />
-            <span class="italic text-brand-red">feeling tired,</span> Sherman?
-          </h1>
-          <p class="mt-6 max-w-xl text-lead text-white/85 text-pretty">
-            Reclaim your energy, strength, and vitality with doctor-supervised testosterone therapy — right here in Sherman, Texas.
-          </p>
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href={BOOKING.trt} class="btn bg-brand-red text-white hover:bg-brand-red-dark">
-              <Icon name="calendar" size={18} />
-              Get Your $79 Assessment
-            </a>
-            <a href={`tel:${CONTACT.phoneRaw}`} class="btn border-2 border-white bg-transparent text-white hover:bg-white hover:text-surface-dark">
-              <Icon name="phone" size={18} />
-              {CONTACT.phone}
-            </a>
-          </div>
-          <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-meta">
-            <li class="inline-flex items-center gap-2 text-white/80">
-              <Icon name="shield-check" size={16} />
-              Texas-Licensed Physicians
-            </li>
-            <li class="inline-flex items-center gap-2 text-white/80">
-              <Icon name="shield" size={16} />
-              HIPAA Compliant
-            </li>
-            <li class="inline-flex items-center gap-2 text-white/80">
-              <Icon name="map-pin" size={16} />
-              Sherman, TX
-            </li>
-          </ul>
-          <p class="mt-6 text-meta text-white/50">
-            *Individual results may vary. Treatment effectiveness depends on proper medical evaluation and adherence to prescribed protocols.
-          </p>
-        </div>
+  <!-- ====================================================
+       HERO — DARK aurora variant
+       ==================================================== -->
+  <section class="aurora">
+    <div class="container-x relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
+      <div>
+        <span class="eyebrow-dot text-brand-red-soft animate-fade-up">Testosterone Replacement Therapy</span>
 
-        <!-- Offer card -->
-        <div class="relative rounded-2xl border-2 border-brand-red bg-paper-elevated p-8 text-ink-900 shadow-soft-lg">
-          <span class="inline-block rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-wider text-white">
-            Limited Time Offer
-          </span>
-          <h2 class="mt-4 font-display text-h2 text-ink-900">Complete Hormone Assessment</h2>
-          <div class="mt-4 flex items-end gap-3">
-            <span class="font-display text-h1 text-brand-red">$79</span>
-            <span class="pb-2 text-h4 text-ink-300 line-through">$350 value</span>
-          </div>
-          <ul class="mt-6 space-y-3 border-t border-ink-100 pt-6">
-            <li class="flex gap-3">
-              <Icon name="stethoscope" size={20} class="mt-0.5 shrink-0 text-brand-red" />
-              <div>
-                <span class="block font-semibold text-ink-900">Physician Consultation ($150 value)</span>
-                <span class="text-meta text-ink-500">Medical history, symptom evaluation, physical assessment</span>
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <Icon name="flask" size={20} class="mt-0.5 shrink-0 text-brand-red" />
-              <div>
-                <span class="block font-semibold text-ink-900">Complete Lab Panel ($200 value)</span>
-                <span class="text-meta text-ink-500">Total & Free T, Estradiol, PSA, CBC, CMP, additional markers</span>
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <Icon name="list-checks" size={20} class="mt-0.5 shrink-0 text-brand-red" />
-              <div>
-                <span class="block font-semibold text-ink-900">Personalized Treatment Plan</span>
-                <span class="text-meta text-ink-500">Lab review, custom recommendations, patient education</span>
-              </div>
-            </li>
-          </ul>
-          <a href={BOOKING.trt} class="btn-primary mt-6 w-full">Claim Your Spot Now</a>
-          <p class="mt-3 text-meta text-ink-500">
-            <Icon name="shield-check" size={14} class="-mt-0.5 mr-1 inline text-brand-blue-dark" />
-            100% satisfaction guarantee — full refund if not satisfied.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+        <h1 class="editorial mt-6 text-display text-white balance animate-fade-up animation-delay-100">
+          Are you tired of <em>feeling tired</em>, Sherman?
+        </h1>
 
-  <!-- WHY US -->
-  <section class="section">
-    <div class="container-x">
-      <SectionHeader
-        eyebrow="Why Sherman Men Trust Us"
-        title="Real medical care. Real results."
-        align="center"
-      />
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        {
-          [
-            { icon: 'shield-check', title: 'Texas-Licensed Physicians', body: 'All treatment supervised by licensed Texas physicians specializing in testosterone replacement therapy and hormone optimization.' },
-            { icon: 'briefcase', title: '15+ Years Experience', body: 'Extensive experience in testosterone replacement therapy and men\u2019s health optimization.' },
-            { icon: 'microscope', title: 'Evidence-Based Protocols', body: 'Treatment protocols based on the latest clinical research and medical guidelines from AUA and the Endocrine Society.' },
-          ].map((c) => (
-            <div class="card">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-brand-red-soft text-brand-red">
-                <Icon name={c.icon as any} size={24} />
-              </span>
-              <h3 class="mt-4 font-display text-h3 text-ink-900">{c.title}</h3>
-              <p class="mt-2 text-body text-ink-500">{c.body}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section section-tinted">
-    <div class="container-x">
-      <SectionHeader
-        eyebrow="How It Works"
-        title="Getting started is simple."
-        align="center"
-      />
-      <ol class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          [
-            { icon: 'calendar', title: 'Book Your Visit', body: 'Choose a time that fits your schedule. Online booking available 24/7. Takes 60 seconds.' },
-            { icon: 'flask', title: 'Get Tested ($79)', body: 'Come to our Sherman clinic for your comprehensive consultation and lab work. Results in 3–5 days.' },
-            { icon: 'list-checks', title: 'Review Your Results', body: 'Schedule a follow-up (in-person or telehealth). Your physician explains everything in plain English.' },
-            { icon: 'syringe', title: 'Start Treatment', body: 'If you\u2019re a candidate, we create a personalized treatment plan. Medication ships directly to your door.' },
-          ].map((s, i) => (
-            <li class="card relative">
-              <span class="absolute -top-3 left-6 inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-red text-meta font-bold text-white">
-                {i + 1}
-              </span>
-              <Icon name={s.icon as any} size={28} class="mt-2 text-brand-blue-dark" />
-              <h3 class="mt-3 font-display text-h4 text-ink-900">{s.title}</h3>
-              <p class="mt-2 text-meta text-ink-500">{s.body}</p>
-            </li>
-          ))
-        }
-      </ol>
-      <p class="mx-auto mt-8 max-w-2xl text-center text-meta text-ink-500">
-        Most men notice improvements in energy and mood within 2–4 weeks. Results vary by individual.
-      </p>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="section">
-    <div class="container-x">
-      <SectionHeader
-        eyebrow="Real Results"
-        title="Real men. Real results."
-        align="center"
-      />
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        {testimonials.map((t) => <Testimonial {...t} />)}
-      </div>
-      <p class="mx-auto mt-8 max-w-2xl text-center text-meta text-ink-300">
-        Individual patient testimonials reflect personal experiences. Results vary and are not guaranteed.
-      </p>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="section section-tinted">
-    <div class="container-x">
-      <SectionHeader
-        eyebrow="Pricing"
-        title="Transparent pricing — no surprises."
-        lede="No hidden fees. You know exactly what you're paying for."
-        align="center"
-      />
-      <div class="mt-12 grid gap-4 lg:grid-cols-3">
-        {
-          tiers.map((tier) => (
-            <div
-              class:list={[
-                'rounded-xl border p-6 lg:p-8',
-                tier.featured ? 'border-brand-red bg-paper-elevated shadow-soft-lg ring-2 ring-brand-red' : 'border-ink-100 bg-paper-elevated',
-              ]}
-            >
-              {tier.featured && (
-                <span class="inline-block rounded-full bg-brand-red px-3 py-0.5 text-eyebrow font-semibold uppercase tracking-wider text-white">
-                  Most Popular
-                </span>
-              )}
-              <h3 class="mt-3 font-display text-h3 text-ink-900">{tier.name}</h3>
-              <p class="mt-1 text-meta text-ink-500">{tier.tagline}</p>
-              <p class="mt-6 font-display text-display text-ink-900">
-                ${tier.price}<span class="text-h4 text-ink-500">/month</span>
-              </p>
-              <p class="text-meta text-ink-500">{tier.daily}</p>
-              <ul class="mt-6 space-y-2.5">
-                {
-                  tier.features.map((f) => (
-                    <li class="flex gap-2 text-meta text-ink-700">
-                      <Icon name="check" size={16} class="mt-0.5 shrink-0 text-brand-red" />
-                      <span>{f}</span>
-                    </li>
-                  ))
-                }
-              </ul>
-              <a
-                href={BOOKING.trt}
-                class:list={['btn mt-8 w-full', tier.featured ? 'bg-brand-red text-white hover:bg-brand-red-dark' : 'btn-secondary']}
-              >
-                Get Started
-              </a>
-            </div>
-          ))
-        }
-      </div>
-      <p class="mt-8 text-center text-meta text-ink-500">
-        HSA/FSA accepted · All major credit cards · Automatic monthly billing · Payment plans available for annual subscriptions
-      </p>
-    </div>
-  </section>
-
-  <!-- COMPLIANCE -->
-  <section class="section">
-    <div class="container-x">
-      <div class="rounded-xl border border-ink-100 bg-paper-tinted p-8">
-        <p class="mx-auto max-w-3xl text-center text-meta text-ink-500">
-          Our clinic operates in full compliance with Texas Medical Board regulations, DEA requirements for controlled substances, and all applicable state and federal healthcare laws. All testosterone prescriptions are written by Texas-licensed physicians following appropriate medical evaluation and are dispensed through DEA-registered pharmacies.
+        <p class="mt-7 max-w-xl text-lead text-white/80 pretty animate-fade-up animation-delay-300">
+          Low energy. Brain fog. Workouts that don't move the needle. If you've been told it's "just age," get a
+          <strong class="font-semibold text-white">real diagnosis</strong> — from a board-certified Internal Medicine physician with real labs and a real plan.
         </p>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row animate-fade-up animation-delay-400">
+          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
+            <Icon name="calendar" size={18} />
+            Book $79 Assessment
+            <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+          </MagneticButton>
+          <a href={`tel:${CONTACT.phoneRaw}`} class="btn inline-flex items-center gap-2 border-2 border-white/70 bg-transparent text-white hover:bg-white hover:text-surface-dark">
+            <Icon name="phone" size={18} />
+            {CONTACT.phone}
+          </a>
+        </div>
+
+        <!-- Symptom chips -->
+        <ul class="mt-10 flex flex-wrap items-center gap-2.5 animate-fade-up animation-delay-500">
+          {
+            symptomChips.map((c) => (
+              <li class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-meta font-medium text-white/85 backdrop-blur-sm">
+                <Icon name={c.icon as any} size={14} class="text-brand-red-soft" />
+                {c.label}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Floating glass offer card -->
+      <div class="relative animate-fade-up animation-delay-200">
+        <Parallax speed={0.08}>
+          <div class="glass relative rounded-[1.75rem] p-7 md:p-8 text-ink-900 shadow-[0_30px_72px_-28px_rgba(0,0,0,0.55)]">
+            <span class="inline-flex items-center gap-2 rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-[0.12em] text-white">
+              <span class="relative inline-flex h-1.5 w-1.5">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span>
+                <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-white"></span>
+              </span>
+              Now Booking
+            </span>
+
+            <h2 class="mt-4 font-display text-h2 font-semibold text-ink-900">Hormone Assessment</h2>
+            <div class="mt-3 flex items-baseline gap-3">
+              <span class="font-display text-display font-semibold text-brand-red">$79</span>
+              <span class="text-h4 text-ink-300 line-through">$350</span>
+            </div>
+            <p class="mt-1 text-meta text-ink-500">One-time, no subscription required.</p>
+
+            <ul class="mt-6 space-y-3.5 border-t border-ink-100 pt-5">
+              <li class="flex gap-3">
+                <Icon name="flask" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+                <div>
+                  <span class="block font-semibold text-ink-900">Total + Free Testosterone</span>
+                  <span class="text-meta text-ink-500">TT, FT, SHBG, E2, LH, FSH, PSA</span>
+                </div>
+              </li>
+              <li class="flex gap-3">
+                <Icon name="heart-pulse" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+                <div>
+                  <span class="block font-semibold text-ink-900">Cardiometabolic panel</span>
+                  <span class="text-meta text-ink-500">CBC, CMP, lipids, A1c, hematocrit baseline</span>
+                </div>
+              </li>
+              <li class="flex gap-3">
+                <Icon name="stethoscope" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+                <div>
+                  <span class="block font-semibold text-ink-900">Physician review</span>
+                  <span class="text-meta text-ink-500">In-person H&P with a board-certified MD</span>
+                </div>
+              </li>
+              <li class="flex gap-3">
+                <Icon name="list-checks" size={20} class="mt-0.5 shrink-0 text-brand-red" />
+                <div>
+                  <span class="block font-semibold text-ink-900">Personalized treatment plan</span>
+                  <span class="text-meta text-ink-500">Built around your goals, fertility, and risk profile</span>
+                </div>
+              </li>
+            </ul>
+
+            <MagneticButton href={BOOKING.bookNow} class="btn-primary mt-6 w-full justify-center">
+              Claim Your Spot
+              <Icon name="arrow-right" size={16} />
+            </MagneticButton>
+          </div>
+        </Parallax>
+      </div>
+    </div>
+
+    <!-- Trust strip — light strip at bottom of dark hero -->
+    <div class="relative border-t border-white/10 bg-black/20">
+      <div class="container-x py-5">
+        <ul class="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-meta font-medium text-white/80">
+          <li class="inline-flex items-center gap-2">
+            <Icon name="shield-check" size={16} class="text-brand-red-soft" />
+            Texas-Licensed Physician
+          </li>
+          <li class="hidden h-1 w-1 rounded-full bg-white/25 sm:inline-block" aria-hidden="true"></li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="award" size={16} class="text-brand-red-soft" />
+            25+ Years Experience
+          </li>
+          <li class="hidden h-1 w-1 rounded-full bg-white/25 sm:inline-block" aria-hidden="true"></li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="microscope" size={16} class="text-brand-red-soft" />
+            Evidence-Based Protocols
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section section-tinted">
-    <div class="container-x">
-      <SectionHeader
-        eyebrow="FAQ"
-        title="Frequently asked questions"
-        align="center"
-      />
-      <div class="mx-auto mt-12 max-w-3xl">
-        <FAQ faqs={faqs} />
-      </div>
-    </div>
-  </section>
-
-  <!-- BOOKING -->
+  <!-- ====================================================
+       BY THE NUMBERS
+       ==================================================== -->
   <section class="section">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Get Started"
-        title="Book your $79 assessment"
-        align="center"
-      />
-      <div class="mx-auto mt-12 max-w-3xl">
-        <BookingEmbed src={BOOKING.trt} />
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">By the numbers</span>
+        <h2 class="editorial mt-3 text-h1 balance">Low T is more common than <em>you think</em>.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          And it's diagnosable with one blood draw. We do the diagnosis right — and only treat when the evidence supports it.
+        </p>
+      </Reveal>
+      <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <AnimatedStat value={38} suffix="%" label="Of men 45+ have low T" />
+        <AnimatedStat value={25} suffix="+" label="Years of clinical experience" accent />
+        <AnimatedStat value={4} label="Protocol tiers, fully tailored" />
+        <AnimatedStat value={79} prefix="$" label="Complete hormone assessment" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       3-STEP PROCESS
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">How It Works</span>
+        <h2 class="editorial mt-3 text-h1 balance">Getting started is <em>simple</em>.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Three steps. No upselling. No commitment until you've seen your own numbers and talked to a physician.
+        </p>
+      </Reveal>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          steps.map((s, i) => (
+            <Reveal delay={((i * 100) as 0 | 100 | 200)}>
+              <article class="step-card h-full">
+                <span class="step-card-num">{s.num}</span>
+                <span class="icon-tile icon-tile-red">
+                  <Icon name={s.icon as any} size={22} />
+                </span>
+                <h3 class="mt-5 font-display text-h3 font-semibold text-ink-900">{s.title}</h3>
+                <p class="mt-2 text-body text-ink-500">{s.body}</p>
+              </article>
+            </Reveal>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       PATIENT OUTCOMES
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Patient Outcomes"
+          title="Real men. Real results."
+          lede="Texoma men who got their energy, focus, and strength back — through proper diagnosis, not guesswork."
+          align="center"
+        />
+      </Reveal>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          trtTestimonials.map((t, i) => (
+            <Reveal delay={((i * 100) as 0 | 100 | 200)}>
+              <Testimonial {...t} service="trt" />
+            </Reveal>
+          ))
+        }
+      </div>
+
+      <p class="mx-auto mt-8 max-w-2xl text-center text-meta text-ink-300">
+        Individual testimonials reflect personal experiences. Results vary based on baseline labs, adherence, and individual physiology.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       PRICING
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">Pricing</span>
+        <h2 class="editorial mt-3 text-h1 balance">Transparent pricing — <em>no surprises</em>.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Every tier includes physician oversight, prescription medication, all injection supplies, and the lab monitoring that makes TRT safe.
+        </p>
+      </Reveal>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-3">
+        {
+          tiers.map((tier, i) => (
+            <Reveal delay={((i * 100) as 0 | 100 | 200)}>
+              <article class:list={[tier.featured ? 'price-card-featured' : 'price-card', 'h-full flex flex-col']}>
+                {tier.featured && (
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-[0.12em] text-white shadow-md">
+                    Most Popular
+                  </span>
+                )}
+                <h3 class="font-display text-h3 font-semibold text-ink-900">{tier.name}</h3>
+                <p class="mt-1.5 text-meta text-ink-500">{tier.tagline}</p>
+
+                <div class="mt-6 flex items-baseline gap-2">
+                  <span class="font-display text-display font-semibold text-ink-900">${tier.price}</span>
+                  <span class="text-h4 text-ink-500">/mo</span>
+                </div>
+
+                <ul class="mt-6 space-y-3 border-t border-ink-100 pt-6">
+                  {
+                    tier.features.map((f) => (
+                      <li class="flex gap-2.5 text-body text-ink-700">
+                        <Icon name="check-circle" size={18} class="mt-0.5 shrink-0 text-brand-red" />
+                        <span>{f}</span>
+                      </li>
+                    ))
+                  }
+                </ul>
+
+                <div class="mt-8 flex-1 flex items-end">
+                  <MagneticButton
+                    href={BOOKING.bookNow}
+                    class:list={['w-full justify-center', tier.featured ? 'btn-primary' : 'btn-secondary']}
+                  >
+                    Get Started
+                    <Icon name="arrow-right" size={16} />
+                  </MagneticButton>
+                </div>
+              </article>
+            </Reveal>
+          ))
+        }
+      </div>
+
+      <p class="mt-10 text-center text-meta text-ink-500">
+        HSA/FSA accepted. Superbills provided for potential insurance reimbursement. No long-term contracts.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       WHY PHYSICIAN-SUPERVISED
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <div class="mx-auto max-w-4xl">
+        <Reveal>
+          <span class="eyebrow-dot">Why physician-supervised matters</span>
+          <h2 class="editorial mt-4 text-h1 balance">
+            Care by a board-certified <em>Internal Medicine physician</em> — not an algorithm.
+          </h2>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <blockquote class="pullquote mt-10">
+            "TRT isn't a vitamin. It's a controlled medication that affects your heart, blood, prostate, and fertility — it deserves a real physician, not a chatbot."
+          </blockquote>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <p class="mt-8 text-lead text-ink-700 pretty">
+            Testosterone therapy raises hematocrit (we monitor for polycythemia every 90 days), can affect prostate-specific antigen (PSA) trajectory, suppresses endogenous LH/FSH and therefore fertility (we counsel on hCG before, not after), and changes cardiovascular risk factors that need to be watched. None of that gets handled by an online intake form. At Highland, every TRT patient is managed by a physician with 25+ years in Internal Medicine — the specialty trained specifically to manage the whole body, not just the prescription.
+          </p>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       EVIDENCE BOX
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <Reveal>
+        <div class="mx-auto max-w-3xl rounded-2xl border-l-4 border-brand-blue bg-brand-blue-soft p-8 md:p-10">
+          <span class="eyebrow">Evidence-Based Care</span>
+          <p class="mt-4 text-body text-ink-700 pretty">
+            Our protocols follow the diagnostic and treatment frameworks published by the American Urological Association (AUA) and The Endocrine Society. We diagnose hypogonadism on the combined basis of validated symptom assessment plus two morning serum testosterone measurements — not on symptoms alone, and never on a single lab. Treatment goals target mid-normal range total testosterone with stable trough levels.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-meta font-semibold">
+            <a
+              href="https://www.auanet.org/guidelines-and-quality/guidelines/testosterone-deficiency-guideline"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-brand-blue-dark wipe-underline"
+            >
+              AUA Testosterone Deficiency Guideline
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+            <a
+              href="https://www.endocrine.org/clinical-practice-guidelines/testosterone-therapy"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-brand-blue-dark wipe-underline"
+            >
+              Endocrine Society Clinical Practice Guideline
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FAQ
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Frequently Asked"
+          title="Questions men actually ask."
+          lede="Honest answers — the same ones we'd give a friend at the lab counter."
+          align="center"
+        />
+      </Reveal>
+      <div class="mx-auto mt-14 max-w-3xl">
+        <Reveal>
+          <FAQ faqs={faqs} />
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       BOOKING
+       ==================================================== -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Get Started"
+          title="Book your $79 assessment"
+          lede="Pick a morning slot — testosterone peaks in the AM, which is when labs should be drawn."
+          align="center"
+        />
+      </Reveal>
+      <div class="mx-auto mt-14 max-w-[650px]">
+        <Reveal>
+          <BookingEmbed src={BOOKING.trt} />
+        </Reveal>
       </div>
     </div>
   </section>
 
   <CTABanner
     title="Start feeling like yourself again."
-    subtitle="Book your comprehensive $79 hormone assessment with our Texas-licensed physicians."
+    subtitle="Book your $79 assessment. Real labs, real diagnosis, real plan."
     bookingUrl={BOOKING.trt}
   />
 </BaseLayout>

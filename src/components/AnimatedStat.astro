@@ -1,0 +1,103 @@
+---
+/**
+ * AnimatedStat — counter that ticks up to its target value when scrolled into view.
+ * Used for things like "25+ years experience", "3 board-certified providers".
+ *
+ * Props:
+ *   value      target number (e.g. 25)
+ *   suffix     "+" | "%" | "k" — appended after the number
+ *   prefix     "$" | "" — prepended before
+ *   label      caption under the number
+ *   accent     true → red gradient text, false → ink gradient
+ *   duration   ms to count up; default 1400
+ *
+ * Each instance produces a unique id so the script can target it.
+ */
+
+interface Props {
+  value: number;
+  suffix?: string;
+  prefix?: string;
+  label: string;
+  accent?: boolean;
+  duration?: number;
+}
+
+const { value, suffix = '', prefix = '', label, accent = false, duration = 1400 } = Astro.props;
+const uid = `stat-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class="reveal flex flex-col items-center text-center md:items-start md:text-left">
+  <div
+    id={uid}
+    class:list={['stat-figure', accent && 'stat-figure-accent']}
+    data-target={value}
+    data-prefix={prefix}
+    data-suffix={suffix}
+    data-duration={duration}
+    aria-label={`${prefix}${value}${suffix} ${label}`}
+  >
+    {prefix}0{suffix}
+  </div>
+  <p class="mt-2 text-meta font-semibold uppercase tracking-[0.08em] text-ink-500">
+    {label}
+  </p>
+</div>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    function run() {
+      const el = document.getElementById(uid);
+      if (!el || el.dataset.played === '1') return;
+      const target = Number(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const duration = Number(el.dataset.duration) || 1400;
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        el.textContent = `${prefix}${target}${suffix}`;
+        el.dataset.played = '1';
+        return;
+      }
+
+      const start = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        // ease-out-quart
+        const eased = 1 - Math.pow(1 - t, 4);
+        const current = Math.round(target * eased);
+        el.textContent = `${prefix}${current}${suffix}`;
+        if (t < 1) requestAnimationFrame(frame);
+        else el.dataset.played = '1';
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function init() {
+      const el = document.getElementById(uid);
+      if (!el) return;
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced || !('IntersectionObserver' in window)) {
+        // No animation needed — settle to final value immediately
+        run();
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              run();
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.01, rootMargin: '0px 0px -10% 0px' },
+      );
+      io.observe(el);
+    }
+    document.addEventListener('astro:page-load', init);
+    if (document.readyState !== 'loading') init();
+  })();
+</script>

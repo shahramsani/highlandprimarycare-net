@@ -14,6 +14,11 @@ import FAQ from '../components/FAQ.astro';
 import BookingEmbed from '../components/BookingEmbed.astro';
 import Testimonial from '../components/Testimonial.astro';
 import Icon from '../components/Icon.astro';
+import Reveal from '../components/Reveal.astro';
+import AnimatedStat from '../components/AnimatedStat.astro';
+import Parallax from '../components/Parallax.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
 import { PROVIDERS, TESTIMONIALS, BOOKING, CONTACT } from '../config';
 import { SERVICE_CONTENT } from '../content/services';
 import {
@@ -38,103 +43,530 @@ export function getStaticPaths() {
 const props = Astro.props as
   | { kind: 'provider'; provider: (typeof PROVIDERS)[number] }
   | { kind: 'service'; content: (typeof SERVICE_CONTENT)[string] };
+
+/* ------------------------------------------------------------------
+   Provider helpers — split name for editorial italic accent on the
+   surname (Sani / Keahey / Warke).
+------------------------------------------------------------------- */
+type EditorialName = { lead: string; accent: string; credentials: string };
+
+function splitProviderName(slug: string, fullName: string): EditorialName {
+  // Strip trailing credentials (anything after the first comma)
+  const [namePart, ...credParts] = fullName.split(',');
+  const credentials = credParts.join(',').trim();
+  const accentMap: Record<string, string> = {
+    'dr-shahram-sani': 'Sani',
+    'diane-keahey': 'Keahey',
+    'dr-amit-warke': 'Warke',
+  };
+  const accent = accentMap[slug] ?? namePart.trim().split(/\s+/).slice(-1)[0];
+  const lead = namePart.trim().replace(new RegExp(`\\s*${accent}\\s*$`), '').trim();
+  return { lead, accent, credentials };
+}
+
+/* ------------------------------------------------------------------
+   Provider-specific data — credentials timeline + short title for
+   buttons / floating cards.
+------------------------------------------------------------------- */
+type CredStep = { icon: 'graduation-cap' | 'briefcase' | 'award'; title: string; body: string };
+
+const providerExtras: Record<
+  string,
+  {
+    shortName: string;
+    honorific: string;
+    boardLine: string;
+    pullquote: string;
+    timeline: CredStep[];
+    expertiseContext: Record<string, string>;
+  }
+> = {
+  'dr-shahram-sani': {
+    shortName: 'Dr. Sani',
+    honorific: 'Dr.',
+    boardLine: 'Board-Certified Internal Medicine',
+    pullquote:
+      'Medicine is a relationship, not a transaction. The most important thing I can do for a patient is give them my full attention — and the time to actually listen.',
+    timeline: [
+      {
+        icon: 'graduation-cap',
+        title: 'Doctor of Medicine',
+        body: 'Earned his MD at Tehran University of Medical Sciences — one of the most rigorous medical training programs in the region.',
+      },
+      {
+        icon: 'briefcase',
+        title: 'Internal Medicine Residency',
+        body: 'Completed residency training in Internal Medicine at Abington Memorial Hospital, where he honed his approach to complex, multi-system care.',
+      },
+      {
+        icon: 'award',
+        title: '25+ Years in Practice',
+        body: 'Board-certified Internal Medicine physician and Medical Director of Highland Primary Care, serving Sherman and the wider Texoma community.',
+      },
+    ],
+    expertiseContext: {
+      'Internal Medicine':
+        'Deep diagnostic work-ups and long-term management of adult disease — the discipline of seeing the whole patient.',
+      'Primary Care':
+        'A medical home for adults: prevention, screening, and the steady follow-through that real health requires.',
+      "Men's Health":
+        'Prostate health, testosterone, cardiovascular risk, and the conversations men too often skip.',
+      'Chronic Disease Mgmt':
+        'Diabetes, hypertension, cholesterol, thyroid — managed by one physician who knows your full picture.',
+    },
+  },
+  'diane-keahey': {
+    shortName: 'Diane',
+    honorific: 'Ms.',
+    boardLine: 'Doctor of Nursing Practice · FNP-BC',
+    pullquote:
+      'Whole-person care means caring about more than the chart. I want to know what your day looks like — that’s where real medicine happens.',
+    timeline: [
+      {
+        icon: 'graduation-cap',
+        title: 'BSN & MSN, FNP Certification',
+        body: 'Earned a Bachelor of Science in Nursing followed by a Master of Science as a Family Nurse Practitioner — the foundation of a full-spectrum primary care career.',
+      },
+      {
+        icon: 'briefcase',
+        title: 'Doctor of Nursing Practice',
+        body: 'Completed her DNP at the University of Tennessee, the highest practice-focused degree in nursing — emphasizing evidence-based, patient-centered care.',
+      },
+      {
+        icon: 'award',
+        title: '24 Years in Practice',
+        body: 'Board-certified Family Nurse Practitioner with two decades of holistic primary care across diabetes, hypertension, women’s health, and geriatrics.',
+      },
+    ],
+    expertiseContext: {
+      'Family Medicine':
+        'Care for the whole household — children, adults, and seniors — under one roof.',
+      'Primary Care':
+        'Personalized, unhurried visits with a provider who actually knows your history.',
+      "Women's Health":
+        'Annual exams, contraception, menopause, and bone health — practical, judgment-free care.',
+      'Geriatric Care':
+        'Polypharmacy review, fall prevention, cognitive screening, and Medicare wellness visits.',
+    },
+  },
+  'dr-amit-warke': {
+    shortName: 'Dr. Warke',
+    honorific: 'Dr.',
+    boardLine: 'Board-Certified Family Medicine',
+    pullquote:
+      'A thorough exam and a real conversation can solve more than a stack of referrals. That’s what family medicine is supposed to do — and what we still do here.',
+    timeline: [
+      {
+        icon: 'graduation-cap',
+        title: 'Doctor of Medicine',
+        body: 'Earned his MD at Maharashtra Institute of Medical Education and Research in Pune — a competitive program with a strong primary-care tradition.',
+      },
+      {
+        icon: 'briefcase',
+        title: 'Family Medicine Residency',
+        body: 'Completed his Family Medicine residency at LSU Health (EA Conway Medical Center), training across the full age spectrum of patients.',
+      },
+      {
+        icon: 'award',
+        title: '15+ Years in Practice',
+        body: 'Board-certified Family Medicine physician focused on thorough exams, evidence-based prevention, and steady chronic disease management.',
+      },
+    ],
+    expertiseContext: {
+      'Family Medicine':
+        'Continuity of care for every age — kids, adults, and seniors — with the same provider.',
+      'Primary Care':
+        'A real medical home in Sherman: prevention, screening, and steady follow-up.',
+      'Preventive Medicine':
+        'Annual physicals, vaccinations, and risk-based screening grounded in USPSTF guidelines.',
+      'Chronic Disease Mgmt':
+        'Diabetes, hypertension, cholesterol, asthma, and more — managed by one trusted physician.',
+    },
+  },
+};
+
+/* ------------------------------------------------------------------
+   Service helper — split the hero headline so the last meaningful
+   word can be wrapped in <em> for the editorial italic-red accent.
+------------------------------------------------------------------- */
+function splitHeroHeadline(hero: string): { lead: string; accent: string } {
+  const tokens = hero.trim().split(/\s+/);
+  if (tokens.length < 2) return { lead: '', accent: hero };
+
+  // Strip trailing punctuation from the last token (but keep it for display)
+  const lastIdx = tokens.length - 1;
+  const lastRaw = tokens[lastIdx];
+
+  // Prefer keyword-based emphasis where a meaningful verb/noun pair exists
+  const emphasisKeywords = [
+    'today',
+    'today.',
+    'wrong.',
+    'conditions.',
+    'care.',
+    'men.',
+    'well.',
+    'surprises.',
+    'covered.',
+    'today?',
+    'today!',
+  ];
+  const lower = lastRaw.toLowerCase();
+
+  // Default — italicize the final word with any trailing punctuation kept
+  if (emphasisKeywords.includes(lower) || tokens.length >= 2) {
+    return {
+      lead: tokens.slice(0, lastIdx).join(' '),
+      accent: lastRaw,
+    };
+  }
+
+  return { lead: tokens.slice(0, lastIdx).join(' '), accent: lastRaw };
+}
+
+function splitTitleAccent(title: string): { lead: string; accent: string } {
+  const tokens = title.trim().split(/\s+/);
+  if (tokens.length < 2) return { lead: '', accent: title };
+  return {
+    lead: tokens.slice(0, -1).join(' '),
+    accent: tokens[tokens.length - 1],
+  };
+}
+
+/* ------------------------------------------------------------------
+   Stats config per service. Only slugs in this map get a stats strip.
+------------------------------------------------------------------- */
+type ServiceStat = { value: number; suffix?: string; prefix?: string; label: string; accent?: boolean };
+
+const serviceStats: Record<string, ServiceStat[]> = {
+  'preventive-services': [
+    { value: 100, suffix: '%', label: 'Covered by most plans', accent: true },
+    { value: 6, suffix: '+', label: 'Core screenings per visit' },
+    { value: 12, suffix: '+', label: 'Insurance plans welcome' },
+    { value: 25, suffix: '+', label: 'Years clinical experience' },
+  ],
+  'management-of-chronic-conditions': [
+    { value: 64, suffix: '+', label: 'Years combined experience', accent: true },
+    { value: 3, label: 'Board-certified providers' },
+    { value: 4, label: 'Visits per year typical' },
+    { value: 1, label: 'Quarterback for your care' },
+  ],
+  'elderly-care': [
+    { value: 100, suffix: '%', label: 'Medicare wellness covered', accent: true },
+    { value: 6, label: 'Domains assessed' },
+    { value: 24, suffix: '+', label: 'Years caring for seniors' },
+    { value: 3, label: 'Board-certified providers' },
+  ],
+  'mens-health-services': [
+    { value: 25, suffix: '+', label: 'Years men’s health expertise', accent: true },
+    { value: 6, label: 'Core service areas' },
+    { value: 79, prefix: '$', label: 'TRT assessment' },
+    { value: 100, suffix: '%', label: 'Confidential, judgment-free' },
+  ],
+  'semaglutide-pricing-sherman-tx': [
+    { value: 99, prefix: '$', label: 'Starting monthly price', accent: true },
+    { value: 4, label: 'Pricing tiers' },
+    { value: 1, label: 'Texas 503A pharmacy partner' },
+    { value: 0, label: 'Hidden fees' },
+  ],
+};
+
+const specialtyIconMap: Record<string, 'stethoscope' | 'heart-pulse' | 'user' | 'activity' | 'shield-check' | 'users' | 'pill' | 'brain' | 'check-circle'> = {
+  'Internal Medicine': 'stethoscope',
+  'Primary Care': 'heart-pulse',
+  "Men's Health": 'user',
+  'Chronic Disease Mgmt': 'activity',
+  'Family Medicine': 'users',
+  "Women's Health": 'heart-pulse',
+  'Geriatric Care': 'shield-check',
+  'Preventive Medicine': 'shield-check',
+};
+
+const standardProviderFaqs = (providerName: string) => [
+  {
+    q: `Is ${providerName.split(',')[0]} accepting new patients?`,
+    a: `Yes. ${providerName.split(',')[0]} is currently accepting new patients at Highland Primary Care in Sherman, TX. Call 903-871-5671 to schedule.`,
+  },
+  {
+    q: 'What insurance is accepted?',
+    a: 'Highland Primary Care accepts most major insurance plans including Medicare, Medicaid, Blue Cross Blue Shield, Aetna, Cigna, UnitedHealthcare, and more.',
+  },
+  {
+    q: 'Where is the practice located?',
+    a: '300 N Highland Ave, Suite 455, Sherman, TX 75092.',
+  },
+];
+
+/* Pre-compute branch-specific values (Astro can't run logic inside JSX safely). */
+let providerCtx: {
+  ed: EditorialName;
+  extras: (typeof providerExtras)[string];
+  faqs: ReturnType<typeof standardProviderFaqs>;
+} | null = null;
+
+if (props.kind === 'provider') {
+  providerCtx = {
+    ed: splitProviderName(props.provider.slug, props.provider.name),
+    extras: providerExtras[props.provider.slug],
+    faqs: standardProviderFaqs(props.provider.name),
+  };
+}
+
+let serviceCtx: {
+  heroSplit: { lead: string; accent: string };
+  titleSplit: { lead: string; accent: string };
+  firstParaFirstLetter: string;
+  firstParaRest: string;
+  remainingIntro: string[];
+  stats: ServiceStat[] | undefined;
+} | null = null;
+
+if (props.kind === 'service') {
+  const intro = props.content.intro;
+  const firstPara = intro[0] ?? '';
+  serviceCtx = {
+    heroSplit: splitHeroHeadline(props.content.hero),
+    titleSplit: splitTitleAccent(props.content.title),
+    firstParaFirstLetter: firstPara.charAt(0),
+    firstParaRest: firstPara.slice(1),
+    remainingIntro: intro.slice(1),
+    stats: serviceStats[props.content.slug],
+  };
+}
 ---
 
 {
-  props.kind === 'provider' && (
+  props.kind === 'provider' && providerCtx && (
     <BaseLayout
       title={`${props.provider.name} — ${props.provider.title} | Highland Primary Care`}
       description={props.provider.short}
       schemaJson={[
         physicianSchema(props.provider),
-        faqSchema([
-          {
-            q: `Is ${props.provider.name.split(',')[0]} accepting new patients?`,
-            a: `Yes. ${props.provider.name.split(',')[0]} is currently accepting new patients at Highland Primary Care in Sherman, TX. Call 903-871-5671 to schedule.`,
-          },
-          {
-            q: 'What insurance is accepted?',
-            a: 'Highland Primary Care accepts most major insurance plans including Medicare, Medicaid, Blue Cross Blue Shield, Aetna, Cigna, UnitedHealthcare, and more.',
-          },
-          {
-            q: 'Where is the practice located?',
-            a: '300 N Highland Ave, Suite 455, Sherman, TX 75092.',
-          },
-        ]),
+        faqSchema(providerCtx.faqs),
         breadcrumbSchema([
-          { name: 'Home', url: 'https://highlandprimarycare.net/' },
-          { name: 'About', url: 'https://highlandprimarycare.net/about-us/' },
+          { name: 'Home', url: 'https://web.highlandprimarycare.com/' },
+          { name: 'About', url: 'https://web.highlandprimarycare.com/about-us/' },
           {
             name: props.provider.name,
-            url: `https://highlandprimarycare.net/${props.provider.slug}/`,
+            url: `https://web.highlandprimarycare.com/${props.provider.slug}/`,
           },
         ]),
       ]}
     >
-      <section class="bg-paper">
-        <div class="container-x py-16 lg:py-22">
-          <div class="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-            <div class="aspect-[4/5] overflow-hidden rounded-2xl shadow-soft-lg">
-              <img
-                src={props.provider.photo}
-                alt={props.provider.name}
-                width="900"
-                height="1125"
-                fetchpriority="high"
-                class="h-full w-full object-cover object-top"
-              />
+      <ScrollProgress />
+
+      {/* ====================================================
+           HERO — editorial portrait split
+           ==================================================== */}
+      <section class="relative bg-paper py-16 lg:py-24">
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <div class="absolute -left-32 -top-32 h-[26rem] w-[26rem] rounded-full bg-brand-blue/8 blur-3xl"></div>
+          <div class="absolute -right-24 bottom-0 h-[22rem] w-[22rem] rounded-full bg-brand-red/6 blur-3xl"></div>
+        </div>
+
+        <div class="container-x relative grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+          {/* Portrait column */}
+          <div class="relative animate-fade-up">
+            <div class="absolute -right-3 -top-3 h-full w-full rounded-[2rem] bg-gradient-to-br from-brand-blue/15 via-transparent to-brand-red/12 -z-10"></div>
+            <Parallax speed={0.08}>
+              <div
+                class="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_30px_72px_-28px_rgba(10,15,26,0.42)] ring-1 ring-black/5"
+                style={`view-transition-name: provider-photo-${props.provider.slug};`}
+              >
+                <img
+                  src={props.provider.photo}
+                  alt={`${props.provider.name} — ${props.provider.title} at Highland Primary Care`}
+                  width="900"
+                  height="1125"
+                  fetchpriority="high"
+                  class="h-full w-full object-cover object-top transition-transform duration-[2200ms] ease-out hover:scale-[1.04]"
+                />
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+            </Parallax>
+
+            {/* Floating credential glass card */}
+            <div class="glass absolute -right-4 top-6 hidden rounded-2xl p-5 md:block">
+              <p class="text-eyebrow font-semibold uppercase tracking-[0.12em] text-brand-blue-dark">
+                {providerCtx.extras.boardLine}
+              </p>
+              <p class="mt-1 font-display text-h4 font-semibold text-ink-900">
+                {providerCtx.extras.shortName}
+              </p>
+              <p class="text-meta text-ink-500">{props.provider.specialties[0]}</p>
             </div>
-            <div>
-              <span class="eyebrow">Our Providers</span>
-              <h1 class="mt-3 font-display text-display font-semibold text-ink-900 text-balance">
-                {props.provider.name}
+
+            {/* Accepting pill */}
+            <div class="glass absolute -bottom-4 left-6 hidden items-center gap-2 rounded-full px-3.5 py-2 text-meta font-semibold text-ink-900 sm:inline-flex">
+              <span class="relative flex h-2 w-2">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60"></span>
+                <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+              </span>
+              Accepting new patients
+            </div>
+          </div>
+
+          {/* Bio column */}
+          <div>
+            <Reveal>
+              <span class="eyebrow-dot">Our Providers · Medical Staff</span>
+            </Reveal>
+            <Reveal delay={100}>
+              <h1 class="editorial mt-6 text-display text-ink-900 balance">
+                {providerCtx.ed.lead}{' '}<em>{providerCtx.ed.accent}</em>{providerCtx.ed.credentials && (<span class="font-display font-normal not-italic text-ink-300">, {providerCtx.ed.credentials}</span>)}
               </h1>
-              <p class="mt-3 text-lead font-semibold text-brand-blue-dark">
+            </Reveal>
+            <Reveal delay={200}>
+              <p class="mt-4 font-display text-h4 font-medium tracking-tight text-brand-blue-dark">
                 {props.provider.title}
               </p>
-              <ul class="mt-6 flex flex-wrap gap-2">
+            </Reveal>
+
+            <Reveal delay={300}>
+              <ul class="mt-7 flex flex-wrap gap-2">
                 {props.provider.specialties.map((s) => (
-                  <li class="rounded-full bg-brand-blue-soft px-3 py-1.5 text-meta font-medium text-brand-blue-dark">
+                  <li class="rounded-full bg-brand-blue-soft px-3 py-1.5 text-meta font-semibold text-brand-blue-dark">
                     {s}
                   </li>
                 ))}
               </ul>
-              <p class="mt-6 max-w-xl text-body text-ink-700">{props.provider.short}</p>
+            </Reveal>
+
+            <Reveal delay={400}>
+              <p class="mt-7 max-w-xl text-lead text-ink-500 pretty">{props.provider.short}</p>
+            </Reveal>
+
+            <Reveal delay={400}>
               <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href={BOOKING.general} class="btn-primary">
+                <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
                   <Icon name="calendar" size={18} />
-                  Schedule with {props.provider.name.split(',')[0]}
+                  Schedule with {providerCtx.extras.shortName}
+                  <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </MagneticButton>
+                <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
+                  <Icon name="phone" size={18} />
+                  {CONTACT.phone}
                 </a>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
+      {/* ====================================================
+           PULL QUOTE
+           ==================================================== */}
       <section class="section section-tinted">
         <div class="container-x">
-          <SectionHeader
-            eyebrow="Areas of Expertise"
-            title="Comprehensive, personalized care"
-            align="center"
-          />
-          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {props.provider.specialties.map((s) => (
-              <div class="card">
-                <Icon name="check-circle" size={24} class="text-brand-red" />
-                <h3 class="mt-4 font-display text-h4 text-ink-900">{s}</h3>
-              </div>
+          <Reveal>
+            <blockquote class="pullquote mx-auto max-w-3xl text-center text-h1 md:text-display" style="border-left:0; padding-left:0;">
+              <span aria-hidden="true" class="block font-display text-[5rem] leading-none text-brand-red/30">&ldquo;</span>
+              <span class="block">{providerCtx.extras.pullquote}</span>
+              <cite class="mt-6 block font-body text-meta not-italic font-semibold uppercase tracking-[0.12em] text-brand-blue-dark">
+                — {providerCtx.extras.shortName}
+              </cite>
+            </blockquote>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================================================
+           CAREER TIMELINE / CREDENTIALS
+           ==================================================== */}
+      <section class="section">
+        <div class="container-x">
+          <Reveal class="section-head mx-auto text-center">
+            <span class="eyebrow-dot">Education & Credentials</span>
+            <h2 class="editorial mt-3 text-h1 balance">
+              A career built on <em>training</em>.
+            </h2>
+            <p class="text-lead text-ink-500 pretty">
+              Real credentials, real residencies, real years of practice — the kind of training you want behind your care.
+            </p>
+          </Reveal>
+
+          <ol class="mt-14 grid gap-6 md:grid-cols-3">
+            {providerCtx.extras.timeline.map((step, i) => (
+              <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+                <li class="card-premium halo relative h-full">
+                  <div class="flex items-start justify-between">
+                    <span class="icon-tile">
+                      <Icon name={step.icon} size={22} />
+                    </span>
+                    <span class="font-display text-h4 font-semibold tracking-tight text-ink-100">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{step.title}</h3>
+                  <p class="mt-2 text-body text-ink-500">{step.body}</p>
+                </li>
+              </Reveal>
             ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ====================================================
+           AREAS OF EXPERTISE
+           ==================================================== */}
+      <section class="section section-tinted">
+        <div class="container-x">
+          <Reveal class="section-head mx-auto text-center">
+            <span class="eyebrow-dot">Areas of Expertise</span>
+            <h2 class="editorial mt-3 text-h1 balance">
+              Comprehensive, <em>personalized</em> care.
+            </h2>
+            <p class="text-lead text-ink-500 pretty">
+              {providerCtx.extras.shortName} brings depth across the conditions and concerns that matter most to adults in Sherman and the Texoma region.
+            </p>
+          </Reveal>
+
+          <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            {props.provider.specialties.map((s, i) => {
+              const iconName = specialtyIconMap[s] ?? 'check-circle';
+              const context = providerCtx!.extras.expertiseContext[s] ?? '';
+              return (
+                <Reveal delay={((i % 2) * 100) as 0 | 100}>
+                  <div class="card-premium halo h-full">
+                    <div class="flex items-start gap-4">
+                      <span class="icon-tile shrink-0">
+                        <Icon name={iconName} size={22} />
+                      </span>
+                      <div>
+                        <h3 class="font-display text-h4 font-semibold text-ink-900">{s}</h3>
+                        <p class="mt-2 text-body text-ink-500">{context}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
 
+      {/* ====================================================
+           PATIENT STORIES
+           ==================================================== */}
       <section class="section">
         <div class="container-x">
-          <SectionHeader eyebrow="Patient Voices" title="What patients say" align="center" />
-          <div class="mt-12 grid gap-6 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <Testimonial {...t} />
+          <Reveal>
+            <SectionHeader
+              eyebrow="Patient Voices"
+              title="Stories from patients"
+              lede="Real experiences from patients who chose Highland Primary Care for their long-term care."
+              align="center"
+            />
+          </Reveal>
+          <div class="mt-14 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t, i) => (
+              <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+                <Testimonial
+                  {...t}
+                  service={i === 2 ? 'weight-loss' : 'primary'}
+                  metric={i === 2 ? 'Lost 35 lbs' : undefined}
+                />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -146,7 +578,7 @@ const props = Astro.props as
 }
 
 {
-  props.kind === 'service' && (
+  props.kind === 'service' && serviceCtx && (
     <BaseLayout
       title={props.content.metaTitle}
       description={props.content.metaDescription}
@@ -158,111 +590,213 @@ const props = Astro.props as
         }),
         faqSchema(props.content.faqs),
         breadcrumbSchema([
-          { name: 'Home', url: 'https://highlandprimarycare.net/' },
-          { name: 'Services', url: 'https://highlandprimarycare.net/our-services/' },
+          { name: 'Home', url: 'https://web.highlandprimarycare.com/' },
+          { name: 'Services', url: 'https://web.highlandprimarycare.com/our-services/' },
           {
             name: props.content.title,
-            url: `https://highlandprimarycare.net/${props.content.slug}/`,
+            url: `https://web.highlandprimarycare.com/${props.content.slug}/`,
           },
         ]),
       ]}
     >
-      <section class="relative overflow-hidden bg-paper">
-        <div class="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand-blue-soft/60 blur-3xl" />
-        <div class="container-x relative py-16 lg:py-22">
+      <ScrollProgress />
+
+      {/* ====================================================
+           HERO — storytelling, floating orbs
+           ==================================================== */}
+      <section class="hero-frame relative isolate py-16 lg:py-22">
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <div class="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl"></div>
+          <div class="absolute -bottom-40 right-[-6rem] h-[32rem] w-[32rem] rounded-full bg-brand-red/8 blur-3xl"></div>
+        </div>
+
+        <div class="container-x relative">
           <div class="max-w-3xl">
-            <span class="eyebrow">{props.content.eyebrow}</span>
-            <h1 class="mt-4 font-display text-display font-semibold text-ink-900 text-balance">
-              {props.content.hero}
+            <span class="eyebrow-dot animate-fade-up">{props.content.eyebrow}</span>
+
+            <h1 class="editorial mt-6 text-display text-ink-900 balance animate-fade-up animation-delay-100">
+              {serviceCtx.heroSplit.lead}{' '}
+              <em>{serviceCtx.heroSplit.accent}</em>
             </h1>
-            <p class="mt-4 text-lead text-ink-500 text-pretty">{props.content.lede}</p>
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href={BOOKING.general} class="btn-primary">
+
+            <p class="mt-6 max-w-2xl text-lead text-ink-500 pretty animate-fade-up animation-delay-300">
+              {props.content.lede}
+            </p>
+
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row animate-fade-up animation-delay-400">
+              <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
                 <Icon name="calendar" size={18} />
                 Schedule Your Visit
-              </a>
+                <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+              </MagneticButton>
               <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
                 <Icon name="phone" size={18} />
                 {CONTACT.phone}
               </a>
             </div>
+
+            <ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-meta text-ink-700 animate-fade-up animation-delay-500">
+              <li class="inline-flex items-center gap-2">
+                <span class="relative inline-flex h-2.5 w-2.5">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60"></span>
+                  <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                </span>
+                Accepting new patients
+              </li>
+              <li class="inline-flex items-center gap-2">
+                <Icon name="shield-check" size={16} class="text-brand-blue-dark" />
+                Most insurance welcome
+              </li>
+              <li class="inline-flex items-center gap-2">
+                <Icon name="map-pin" size={16} class="text-brand-blue-dark" />
+                Sherman, TX
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
+      {/* ====================================================
+           INTRO — drop cap lead paragraph
+           ==================================================== */}
       {props.content.intro.length > 0 && (
         <section class="section">
           <div class="container-x">
-            <div class="prose-medical mx-auto">
-              {props.content.intro.map((p) => (
-                <p>{p}</p>
+            <Reveal>
+              <div class="prose-medical mx-auto">
+                <p class="text-lead text-ink-700">
+                  <span class="float-left mr-3 mt-1 font-display text-display font-semibold text-brand-red leading-[0.85]">
+                    {serviceCtx.firstParaFirstLetter}
+                  </span>
+                  {serviceCtx.firstParaRest}
+                </p>
+                {serviceCtx.remainingIntro.map((p) => (
+                  <p>{p}</p>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* ====================================================
+           CAPABILITIES — what we offer
+           ==================================================== */}
+      <section class="section section-tinted">
+        <div class="container-x">
+          <Reveal class="section-head mx-auto text-center">
+            <span class="eyebrow-dot">What We Offer</span>
+            <h2 class="editorial mt-3 text-h1 balance">
+              {serviceCtx.titleSplit.lead}{' '}
+              <em>{serviceCtx.titleSplit.accent}</em>
+            </h2>
+            <p class="text-lead text-ink-500 pretty">
+              Everything included with your care — grounded in current guidelines and personal follow-through.
+            </p>
+          </Reveal>
+
+          <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {props.content.capabilities.map((cap, i) => (
+              <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+                <div class="card-premium halo h-full">
+                  <span class="icon-tile">
+                    <Icon name={cap.icon as any} size={22} />
+                  </span>
+                  <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{cap.title}</h3>
+                  <p class="mt-2 text-body text-ink-500">{cap.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================================================
+           EVIDENCE
+           ==================================================== */}
+      {props.content.evidence && (
+        <section class="section">
+          <div class="container-x">
+            <Reveal>
+              <div class="mx-auto max-w-3xl rounded-2xl border-l-4 border-brand-blue bg-brand-blue-soft p-8 md:p-10">
+                <span class="eyebrow text-brand-blue-dark">Evidence-Based Care</span>
+                <p class="mt-3 text-body text-ink-700">{props.content.evidence.lede}</p>
+                <ul class="mt-5 space-y-2">
+                  {props.content.evidence.links.map((link) => (
+                    <li>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener"
+                        class="inline-flex items-center gap-1.5 text-meta font-semibold text-brand-blue-dark hover:text-brand-blue wipe-underline"
+                      >
+                        {link.label}
+                        <Icon name="arrow-up-right" size={14} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* ====================================================
+           STATS / OUTCOMES STRIP (subset of services)
+           ==================================================== */}
+      {serviceCtx.stats && (
+        <section class="section section-tinted">
+          <div class="container-x">
+            <Reveal class="section-head mx-auto text-center">
+              <span class="eyebrow-dot">By the numbers</span>
+              <h2 class="editorial mt-3 text-h1 balance">
+                The kind of care that <em>compounds</em>.
+              </h2>
+            </Reveal>
+            <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+              {serviceCtx.stats.map((s) => (
+                <AnimatedStat
+                  value={s.value}
+                  suffix={s.suffix}
+                  prefix={s.prefix}
+                  label={s.label}
+                  accent={s.accent}
+                />
               ))}
             </div>
           </div>
         </section>
       )}
 
+      {/* ====================================================
+           FAQ
+           ==================================================== */}
       <section class="section section-tinted">
         <div class="container-x">
-          <SectionHeader
-            eyebrow="What We Offer"
-            title={`${props.content.title} — what's included`}
-            align="center"
-          />
-          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {props.content.capabilities.map((cap) => (
-              <div class="card">
-                <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-brand-blue-soft text-brand-blue-dark">
-                  <Icon name={cap.icon as any} size={24} />
-                </span>
-                <h3 class="mt-4 font-display text-h4 text-ink-900">{cap.title}</h3>
-                <p class="mt-2 text-body text-ink-500">{cap.body}</p>
-              </div>
-            ))}
+          <Reveal>
+            <SectionHeader eyebrow="FAQ" title="Frequently asked questions" align="center" />
+          </Reveal>
+          <div class="mx-auto mt-12 max-w-3xl">
+            <Reveal>
+              <FAQ faqs={props.content.faqs} />
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {props.content.evidence && (
-        <section class="section">
-          <div class="container-x">
-            <div class="mx-auto max-w-3xl rounded-xl border-l-4 border-brand-blue bg-brand-blue-soft p-8">
-              <p class="eyebrow text-brand-blue-dark">Evidence-Based Care</p>
-              <p class="mt-3 text-body text-ink-700">{props.content.evidence.lede}</p>
-              <ul class="mt-4 space-y-2">
-                {props.content.evidence.links.map((link) => (
-                  <li>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener"
-                      class="inline-flex items-center gap-1.5 text-meta font-semibold text-brand-blue-dark hover:text-brand-blue"
-                    >
-                      {link.label}
-                      <Icon name="arrow-up-right" size={14} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section class="section section-tinted">
+      {/* ====================================================
+           BOOKING
+           ==================================================== */}
+      <section class="section bg-white">
         <div class="container-x">
-          <SectionHeader eyebrow="FAQ" title="Frequently asked questions" align="center" />
-          <div class="mx-auto mt-12 max-w-3xl">
-            <FAQ faqs={props.content.faqs} />
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container-x">
-          <SectionHeader eyebrow="Get Started" title="Schedule your visit" align="center" />
-          <div class="mx-auto mt-12 max-w-3xl">
-            <BookingEmbed src={BOOKING.general} />
+          <Reveal>
+            <SectionHeader eyebrow="Get Started" title="Schedule your visit" align="center" />
+          </Reveal>
+          <div class="mx-auto mt-12 max-w-[650px]">
+            <Reveal>
+              <BookingEmbed src={BOOKING.general} />
+            </Reveal>
           </div>
         </div>
       </section>

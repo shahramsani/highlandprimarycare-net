@@ -19,3 +19,19 @@ npm-debug.log*
 
 # Local-only Claude settings (per-user permissions)
 .claude/settings.local.json
+
+# Local screenshot/dev artifacts
+tmp/
+playwright-report/
+test-results/
+screenshots/
+graphify-out/
+
+# Lighthouse report artifacts (dev only)
+lh*.json
+lighthouse-report.json
+
+# Dev screenshot artifacts
+check-*.png
+form-*.png
+v-*.png

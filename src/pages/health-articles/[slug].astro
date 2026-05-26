@@ -29,15 +29,15 @@ const articleSchema = {
   publisher: {
     '@type': 'Organization',
     name: SITE.name,
-    logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo.png` },
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo.svg` },
   },
   mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE.url}/health-articles/${article.slug}/` },
 };
 
 const breadcrumb = breadcrumbSchema([
-  { name: 'Home', url: 'https://highlandprimarycare.net/' },
-  { name: 'Health Articles', url: 'https://highlandprimarycare.net/health-articles/' },
-  { name: article.title, url: `https://highlandprimarycare.net/health-articles/${article.slug}/` },
+  { name: 'Home', url: 'https://web.highlandprimarycare.com/' },
+  { name: 'Health Articles', url: 'https://web.highlandprimarycare.com/health-articles/' },
+  { name: article.title, url: `https://web.highlandprimarycare.com/health-articles/${article.slug}/` },
 ]);
 ---
 

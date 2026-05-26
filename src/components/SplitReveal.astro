@@ -1,0 +1,35 @@
+---
+/**
+ * SplitReveal — splits text into words and reveals each with a stagger as it enters view.
+ * Server-renders the splits so SSR HTML is final (no FOUC).
+ *
+ *   <SplitReveal as="h1" class="text-display">Your wellness journey starts here.</SplitReveal>
+ */
+
+interface Props {
+  as?: string;
+  class?: string;
+  text?: string;
+  /** Per-word stagger in ms */
+  stagger?: number;
+}
+
+const { as: Tag = 'span', class: classProp = '', text, stagger = 45 } = Astro.props;
+
+// Either use the `text` prop or the default slot — but we need to know words at server time
+// so we render server-side spans. Easiest is to require the `text` prop for SSR splitting.
+const raw = text ?? '';
+const words = raw.split(/(\s+)/); // keep whitespace as separate tokens
+let idx = 0;
+---
+
+<Tag class:list={['split-reveal reveal', classProp]}>
+  {words.map((w) => {
+    if (!w.trim()) return w;
+    const delay = idx * stagger;
+    idx += 1;
+    return (
+      <span class="split-word" style={`transition-delay: ${delay}ms`}>{w}</span>
+    );
+  })}
+</Tag>

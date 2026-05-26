@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 
 interface Props {
+  slug?: string;
   name: string;
   title: string;
   photo: string;
@@ -9,24 +10,33 @@ interface Props {
   short: string;
   href: string;
 }
-const { name, title, photo, specialties, short, href } = Astro.props;
+const { slug, name, title, photo, specialties, short, href } = Astro.props;
+
+const transitionName = slug ? `provider-photo-${slug}` : undefined;
 ---
 
-<article class="card card-hover group flex flex-col">
-  <div class="relative mb-5 aspect-[4/5] overflow-hidden rounded-lg bg-paper-tinted">
+<article
+  class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink-100 bg-paper-elevated p-5 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand-blue/30 hover:shadow-[0_20px_44px_-18px_rgba(10,15,26,0.18)] md:p-6"
+>
+  <a href={href} class="absolute inset-0 z-10" aria-label={`Learn more about ${name}`}></a>
+
+  <div class="relative mb-5 aspect-[4/5] overflow-hidden rounded-xl bg-paper-tinted">
     <img
       src={photo}
-      alt={name}
+      alt={`${name} — ${title}`}
       width="600"
       height="750"
       loading="lazy"
       decoding="async"
-      class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+      class="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+      style={transitionName ? `view-transition-name: ${transitionName};` : undefined}
     />
+    {/* gradient veil at bottom for legibility of overlay text on darker images */}
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent"></div>
   </div>
 
-  <h3 class="font-display text-h3 text-ink-900">{name}</h3>
-  <p class="mt-1 text-meta font-semibold uppercase tracking-wide text-brand-blue-dark">
+  <h3 class="font-display text-h3 font-semibold tracking-tight text-ink-900">{name}</h3>
+  <p class="mt-1 text-meta font-semibold uppercase tracking-[0.06em] text-brand-blue-dark">
     {title}
   </p>
 
@@ -40,10 +50,10 @@ const { name, title, photo, specialties, short, href } = Astro.props;
     }
   </ul>
 
-  <p class="mt-4 line-clamp-4 text-body text-ink-500">{short}</p>
+  <p class="mt-4 flex-1 text-body text-ink-500 line-clamp-4">{short}</p>
 
-  <a href={href} class="mt-6 inline-flex items-center gap-1.5 font-semibold text-brand-blue-dark hover:text-brand-blue">
+  <span class="relative z-20 mt-auto pt-5 inline-flex w-fit items-center gap-1.5 font-semibold text-brand-blue-dark transition-colors group-hover:text-brand-blue">
     Learn more
-    <Icon name="arrow-right" size={18} class="transition-transform group-hover:translate-x-0.5" />
-  </a>
+    <Icon name="arrow-right" size={18} class="transition-transform duration-200 group-hover:translate-x-1" />
+  </span>
 </article>

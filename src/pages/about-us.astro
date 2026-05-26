@@ -5,72 +5,234 @@ import ProviderCard from '../components/ProviderCard.astro';
 import CTABanner from '../components/CTABanner.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import Icon from '../components/Icon.astro';
-import { PROVIDERS } from '../config';
-import { localBusinessSchema } from '../schema';
+import Reveal from '../components/Reveal.astro';
+import AnimatedStat from '../components/AnimatedStat.astro';
+import Parallax from '../components/Parallax.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import { PROVIDERS, BOOKING, CONTACT, SITE } from '../config';
+import { localBusinessSchema, breadcrumbSchema } from '../schema';
+
+const differentiators = [
+  { icon: 'shield-check', title: 'Board-certified physicians', body: 'Every provider is board-certified in Internal Medicine, Family Medicine, or holds a Doctorate of Nursing Practice.' },
+  { icon: 'briefcase', title: '25+ years of experience', body: 'Decades of practice in Sherman means deep clinical judgment — and continuity for the families we serve.' },
+  { icon: 'flask', title: 'On-site labs', body: 'Bloodwork, A1c, lipid panels and screenings completed right in our office — no second trip, no extra bill.' },
+  { icon: 'clock', title: 'Same-day appointments', body: 'Acute illnesses and urgent concerns are often handled the day you call. Real access, not weeks of waiting.' },
+  { icon: 'award', title: 'Most insurance welcome', body: 'Medicare, Medicaid, Blue Cross Blue Shield, Aetna, Cigna, UnitedHealthcare, Humana, Tricare and more.' },
+  { icon: 'heart-pulse', title: 'Whole-person primary care', body: 'Preventive medicine, chronic disease, mental health, weight loss, hormone optimization — under one roof.' },
+];
 ---
 
 <BaseLayout
-  title="About Highland Primary Care — Doctors in Sherman TX"
-  description="Meet the board-certified doctors and providers at Highland Primary Care in Sherman, TX. Compassionate, comprehensive care for the whole family."
-  schemaJson={localBusinessSchema()}
+  title="About Highland Primary Care | Sherman TX Family Physicians"
+  description="Highland Primary Care is a long-established Sherman, TX clinic with board-certified physicians, on-site labs, and same-day appointments. Meet our team."
+  schemaJson={[
+    localBusinessSchema(),
+    breadcrumbSchema([
+      { name: 'Home', url: `${SITE.url}/` },
+      { name: 'About', url: `${SITE.url}/about-us/` },
+    ]),
+  ]}
 >
-  <section class="bg-paper">
-    <div class="container-x py-16 lg:py-22">
-      <SectionHeader
-        as="h1"
-        eyebrow="About Us"
-        title="Compassionate primary care, built on real relationships."
-        lede="Highland Primary Care is a long-established Sherman, TX clinic dedicated to providing personalized, comprehensive healthcare for patients of all ages."
-        align="center"
-      />
+  <ScrollProgress />
+
+  <!-- ====================================================
+       HERO
+       ==================================================== -->
+  <section class="hero-frame relative isolate">
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl animate-drift"></div>
+      <div class="absolute -bottom-40 right-[-6rem] h-[32rem] w-[32rem] rounded-full bg-brand-red/8 blur-3xl animate-drift" style="animation-delay: -8s"></div>
+    </div>
+
+    <div class="container-x relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
+      <div>
+        <span class="eyebrow-dot animate-fade-up">Our Story · Established Practice</span>
+
+        <h1 class="editorial mt-6 text-display text-ink-900 balance animate-fade-up animation-delay-100">
+          Compassionate primary<br />
+          care, built on <em>real relationships</em>.
+        </h1>
+
+        <p class="mt-7 max-w-xl text-lead text-ink-500 pretty animate-fade-up animation-delay-300">
+          Highland Primary Care is a long-established Sherman, TX clinic where unhurried, board-certified care is still the standard. We serve patients across <strong class="font-semibold text-ink-700">Sherman, Denison, Pottsboro</strong> and the wider Texoma region.
+        </p>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row animate-fade-up animation-delay-400">
+          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
+            <Icon name="calendar" size={18} />
+            Schedule Your Visit
+            <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+          </MagneticButton>
+          <a href="#providers" class="btn-secondary">
+            <Icon name="users" size={18} />
+            Meet the team
+          </a>
+        </div>
+
+        <ul class="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-meta text-ink-700 animate-fade-up animation-delay-500">
+          <li class="inline-flex items-center gap-2">
+            <Icon name="shield-check" size={16} class="text-brand-blue-dark" />
+            Board-certified
+          </li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="map-pin" size={16} class="text-brand-blue-dark" />
+            300 N Highland Ave, Sherman
+          </li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="clock" size={16} class="text-brand-blue-dark" />
+            Mon–Fri · 8a–5p
+          </li>
+        </ul>
+      </div>
+
+      <div class="relative animate-fade-up animation-delay-200">
+        <div class="absolute -right-3 -top-3 h-full w-full rounded-[2rem] bg-gradient-to-br from-brand-blue/15 via-transparent to-brand-red/12 -z-10"></div>
+
+        <Parallax speed={0.08}>
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_30px_72px_-28px_rgba(10,15,26,0.42)] ring-1 ring-black/5">
+            <img
+              src="/images/dr-sani.png"
+              alt="Dr. Shahram N. Sani, MD — Medical Director, Highland Primary Care Sherman TX"
+              width="900"
+              height="1125"
+              loading="lazy"
+              class="h-full w-full object-cover object-top scale-[1.03] transition-transform duration-[2200ms] ease-out hover:scale-[1.06]"
+            />
+            <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent"></div>
+          </div>
+        </Parallax>
+
+        <div class="glass absolute -bottom-6 -left-6 hidden rounded-2xl p-5 md:block animate-float-y" style="animation-delay: -2s">
+          <p class="text-eyebrow font-semibold uppercase tracking-[0.12em] text-brand-blue-dark">Established</p>
+          <p class="mt-1 font-display text-h4 font-semibold text-ink-900">A practice that knows you</p>
+          <p class="text-meta text-ink-500">Three providers · one team</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <TrustStrip />
 
-  <!-- Mission / story -->
+  <!-- ====================================================
+       STATS STRIP
+       ==================================================== -->
   <section class="section">
     <div class="container-x">
-      <div class="prose-medical mx-auto">
-        <h2>Our mission</h2>
-        <p>
-          At Highland Primary Care, we believe the foundation of good health is a strong, ongoing relationship between a patient and their physician. We take the time to listen, ask the right questions, and develop care plans that fit your life — not a template.
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">By the numbers</span>
+        <h2 class="editorial mt-3 text-h1 balance">A practice <em>built to last</em>.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Real time, real expertise, real follow-through — for the families we've cared for, and the ones we're meeting today.
         </p>
-        <p>
-          Our practice serves Sherman, Denison, Pottsboro, and the wider Texoma region with a full spectrum of primary care services: preventive medicine, chronic disease management, mental health, medical weight loss, hormone optimization, and more.
-        </p>
-        <h2>What sets us apart</h2>
-        <ul>
-          <li><strong>Board-certified physicians</strong> with decades of combined experience.</li>
-          <li><strong>On-site labs</strong> so most testing happens at the time of your visit.</li>
-          <li><strong>Same-day appointments</strong> often available for acute concerns.</li>
-          <li><strong>Most major insurance accepted</strong>, including Medicare and Medicaid.</li>
-          <li><strong>One place for the whole family</strong> — from chronic care to weight loss to mental health.</li>
-        </ul>
+      </Reveal>
+      <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <AnimatedStat value={25} suffix="+" label="Years of clinical experience" accent />
+        <AnimatedStat value={3} label="Board-certified providers" />
+        <AnimatedStat value={10} label="Services under one roof" />
+        <AnimatedStat value={12} suffix="+" label="Insurance plans accepted" />
       </div>
     </div>
   </section>
 
-  <!-- Providers -->
+  <!-- ====================================================
+       MISSION — editorial 2-column with pullquote
+       ==================================================== -->
   <section class="section section-tinted">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Our Team"
-        title="Meet your providers"
-        lede="Board-certified physicians and providers dedicated to your long-term health and well-being."
-        align="center"
-      />
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
+      <div class="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+        <Reveal>
+          <span class="eyebrow-dot">Mission</span>
+          <h2 class="editorial mt-3 text-h1 balance">
+            We listen first. <em>Then</em> we treat.
+          </h2>
+          <p class="mt-6 text-lead text-ink-500 pretty">
+            At Highland Primary Care we believe the foundation of good health is a strong, ongoing relationship between a patient and their physician. We take the time to listen, ask the right questions, and develop a plan that fits your life — not a template.
+          </p>
+          <p class="mt-5 text-body text-ink-500 pretty">
+            Our team serves Sherman, Denison, Pottsboro and the wider Texoma region with a full spectrum of primary care: preventive medicine, chronic disease management, mental health, medical weight loss, hormone optimization and acute care — all from board-certified physicians who live in this community.
+          </p>
+          <a href="/our-services/" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand-blue-dark hover:text-brand-blue wipe-underline">
+            Explore our services
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <div class="glass relative rounded-3xl p-8 md:p-10">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-brand-red/10 blur-2xl" aria-hidden="true"></div>
+            <Icon name="heart-pulse" size={32} class="text-brand-red" />
+            <blockquote class="pullquote mt-6">
+              "Appointments are unhurried. Your story matters more than a 7-minute time slot."
+            </blockquote>
+            <p class="mt-6 text-meta font-semibold uppercase tracking-[0.08em] text-brand-blue-dark">
+              Dr. Shahram N. Sani, MD
+            </p>
+            <p class="text-meta text-ink-500">Medical Director · Board-Certified Internal Medicine</p>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       WHAT SETS US APART
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">What sets us apart</span>
+        <h2 class="editorial mt-3 text-h1 balance">Quiet competence. <em>Real</em> access.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          We're not a chain. We're not a mail-order clinic. We're a long-established Sherman practice with real credentials and real follow-through.
+        </p>
+      </Reveal>
+
+      <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          PROVIDERS.map((p) => (
-            <ProviderCard
-              name={p.name}
-              title={p.title}
-              photo={p.photo}
-              specialties={p.specialties}
-              short={p.short}
-              href={`/${p.slug}/`}
-            />
+          differentiators.map((d, i) => (
+            <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <li class="card-premium halo h-full">
+                <span class="icon-tile">
+                  <Icon name={d.icon as any} size={22} />
+                </span>
+                <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{d.title}</h3>
+                <p class="mt-2 text-body text-ink-500">{d.body}</p>
+              </li>
+            </Reveal>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MEET YOUR PROVIDERS
+       ==================================================== -->
+  <section id="providers" class="section section-tinted scroll-mt-24">
+    <div class="container-x">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Our Team"
+          title="Meet your providers"
+          lede="Board-certified physicians and providers dedicated to your long-term health and well-being."
+          align="center"
+        />
+      </Reveal>
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          PROVIDERS.map((p, i) => (
+            <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <ProviderCard
+                slug={p.slug}
+                name={p.name}
+                title={p.title}
+                photo={p.photo}
+                specialties={p.specialties}
+                short={p.short}
+                href={`/${p.slug}/`}
+              />
+            </Reveal>
           ))
         }
       </div>

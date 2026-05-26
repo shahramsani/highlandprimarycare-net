@@ -10,7 +10,7 @@ interface Props {
 const {
   title = 'Ready to schedule your visit?',
   subtitle = "We're accepting new patients. Call us or book online — it takes less than a minute.",
-  bookingUrl = BOOKING.general,
+  bookingUrl = BOOKING.bookNow,
 } = Astro.props;
 ---
 
@@ -19,7 +19,7 @@ const {
     <div class="grid items-center gap-8 md:grid-cols-[1fr_auto]">
       <div>
         <h2 class="font-display text-h1 font-semibold text-white text-balance">{title}</h2>
-        <p class="mt-3 max-w-2xl text-lead text-white/90 text-pretty">{subtitle}</p>
+        <p class="mt-3 max-w-2xl text-lead text-white text-pretty">{subtitle}</p>
       </div>
       <div class="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
         <a

@@ -1,5 +1,6 @@
 ---
 import { SEO } from 'astro-seo';
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 import { SITE, CONTACT } from '../config';
 import Header from '../components/Header.astro';
@@ -72,8 +73,33 @@ const schemas = Array.isArray(schemaJson) ? schemaJson : schemaJson ? [schemaJso
 
     <!-- Preconnect for performance -->
     <link rel="dns-prefetch" href="https://app.highlandprimarycare.cc" />
+    <link rel="dns-prefetch" href="https://beta.leadconnectorhq.com" />
+    <!-- Preload hero image (home page LCP element) -->
+    <slot name="head-preload" />
+
+    <!-- Robots / indexing -->
+    {noindex
+      ? <meta name="robots" content="noindex,nofollow" />
+      : <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    }
+
+    <!-- Smooth cross-page transitions -->
+    <ViewTransitions fallback="animate" />
+
+    <!-- Mark <html> for JS-only reveal animation. Without this class the .reveal
+         elements stay visible (defense-in-depth against FOUC / disabled JS).
+         Skip on mobile — no scroll animations, content always visible. -->
+    <script is:inline>
+      (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (window.matchMedia('(max-width: 767px)').matches) return;
+        document.documentElement.classList.add('js-reveal');
+      })();
+    </script>
   </head>
   <body>
+    <div id="cursor-glow" aria-hidden="true"></div>
+
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand-blue focus:px-4 focus:py-2 focus:text-white"
@@ -81,24 +107,92 @@ const schemas = Array.isArray(schemaJson) ? schemaJson : schemaJson ? [schemaJso
       Skip to content
     </a>
 
-    <Header />
+    <Header transition:persist />
 
     <main id="main">
       <slot />
     </main>
 
     <Footer />
-    <StickyMobileBar />
+    <StickyMobileBar transition:persist />
 
-    <!-- Facebook Pixel (preserved from existing site) -->
-    <noscript>
-      <img
-        height="1"
-        width="1"
-        style="display:none"
-        src="https://www.facebook.com/tr?id=812623817653317&ev=PageView&noscript=1"
-        alt=""
-      />
-    </noscript>
+    <!-- Scroll-reveal: activates .reveal elements as they enter the viewport -->
+    <script is:inline>
+      (function () {
+        function init() {
+          const els = document.querySelectorAll('.reveal:not(.is-visible)');
+          if (!els.length) return;
+          if (!('IntersectionObserver' in window)) {
+            els.forEach((el) => el.classList.add('is-visible'));
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+          );
+          els.forEach((el) => io.observe(el));
+        }
+        // Run at every readiness milestone — initial load AND view-transition swaps
+        document.addEventListener('astro:page-load', init);
+        document.addEventListener('DOMContentLoaded', init);
+        if (document.readyState !== 'loading') init();
+      })();
+    </script>
+
+    <!-- Cursor glow — smooth lerp trail, disabled on touch & reduced-motion -->
+    <script is:inline>
+      (function () {
+        if ('ontouchstart' in window) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var glow = document.getElementById('cursor-glow');
+        if (!glow) return;
+        var tx = -9999, ty = 0, cx = tx, cy = ty, visible = false;
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function tick() {
+          cx = lerp(cx, tx, 0.09);
+          cy = lerp(cy, ty, 0.09);
+          glow.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)';
+          requestAnimationFrame(tick);
+        }
+        document.addEventListener('mousemove', function (e) {
+          tx = e.clientX;
+          ty = e.clientY;
+          if (!visible) { visible = true; glow.style.opacity = '1'; }
+        });
+        document.addEventListener('mouseleave', function () {
+          visible = false;
+          glow.style.opacity = '0';
+        });
+        tick();
+      })();
+    </script>
+
+    <!-- LeadConnector Chat Widget — deferred until first user interaction to avoid LCP/TBT impact -->
+    <script is:inline>
+      (function () {
+        var _loaded = false;
+        function _loadChat() {
+          if (_loaded) return;
+          _loaded = true;
+          var s = document.createElement('script');
+          s.src = 'https://beta.leadconnectorhq.com/loader.js';
+          s.dataset.resourcesUrl = 'https://beta.leadconnectorhq.com/chat-widget/loader.js';
+          s.dataset.widgetId = '6a108f7e975ecd3031274453';
+          s.async = true;
+          document.body.appendChild(s);
+        }
+        ['mouseenter', 'touchstart', 'scroll', 'keydown'].forEach(function (e) {
+          document.addEventListener(e, _loadChat, { once: true, passive: true });
+        });
+        setTimeout(_loadChat, 6000);
+      })();
+    </script>
   </body>
 </html>

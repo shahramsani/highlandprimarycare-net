@@ -5,19 +5,77 @@ interface Props {
   quote: string;
   name: string;
   city: string;
+  /** Optional outcome callout, e.g. "Lost 35 lbs in 12 weeks" */
+  metric?: string;
+  /** Optional avatar initials override (else derived from name) */
+  initials?: string;
+  /** Service slug — applies a subtle accent color */
+  service?: 'weight-loss' | 'trt' | 'primary';
 }
-const { quote, name, city } = Astro.props;
+const { quote, name, city, metric, initials, service = 'primary' } = Astro.props;
+
+const computedInitials =
+  initials ??
+  name
+    .split(/\s+/)
+    .map((s) => s.charAt(0))
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
+const accent =
+  service === 'weight-loss'
+    ? 'from-brand-red-soft to-paper-elevated'
+    : service === 'trt'
+    ? 'from-brand-blue-soft to-paper-elevated'
+    : 'from-paper-tinted to-paper-elevated';
 ---
 
-<figure class="card flex h-full flex-col">
-  <div class="flex gap-0.5 text-brand-red">
-    {Array.from({ length: 5 }).map(() => <Icon name="star" size={18} class="fill-current" />)}
+<figure
+  class:list={[
+    'group relative flex h-full flex-col rounded-xl border border-ink-100 bg-paper-elevated p-6 md:p-8',
+    'transition-[transform,box-shadow,border-color] duration-300',
+    'hover:-translate-y-1 hover:border-brand-blue/30',
+    'hover:shadow-[0_18px_40px_-16px_rgba(10,15,26,0.15)]',
+    'bg-gradient-to-br', accent,
+  ]}
+>
+  <!-- Large quote glyph in display serif -->
+  <span
+    aria-hidden="true"
+    class="absolute right-5 top-4 select-none font-display text-[5rem] leading-none text-brand-red/15"
+  >&ldquo;</span>
+
+  <!-- 5-star rating -->
+  <div class="flex gap-0.5 text-brand-red" role="img" aria-label="5-star rating">
+    {Array.from({ length: 5 }).map(() => <Icon name="star" size={16} class="fill-current" />)}
   </div>
-  <blockquote class="mt-4 flex-1 text-body italic text-ink-700">
-    &ldquo;{quote}&rdquo;
+
+  <!-- The quote -->
+  <blockquote class="mt-5 flex-1 text-[1.0625rem] leading-[1.55] text-ink-900 text-pretty">
+    {quote}
   </blockquote>
-  <figcaption class="mt-5 border-t border-ink-100 pt-4 text-meta">
-    <span class="block font-semibold text-ink-900">{name}</span>
-    <span class="text-ink-500">{city}</span>
+
+  {
+    metric && (
+      <div class="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-red/20 bg-brand-red/5 px-3 py-1 text-meta font-semibold text-brand-red-dark">
+        <Icon name="trending-up" size={14} />
+        {metric}
+      </div>
+    )
+  }
+
+  <figcaption class="mt-6 flex items-center gap-3 border-t border-ink-100 pt-5">
+    <span
+      aria-hidden="true"
+      class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-blue-soft font-display text-[0.9375rem] font-semibold text-brand-blue-dark"
+    >
+      {computedInitials}
+    </span>
+    <div class="leading-tight">
+      <div class="font-semibold text-ink-900">{name}</div>
+      <div class="text-meta text-ink-500">{city}</div>
+    </div>
   </figcaption>
 </figure>

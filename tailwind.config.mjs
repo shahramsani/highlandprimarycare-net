@@ -33,8 +33,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Fraunces Variable"', 'ui-serif', 'Georgia', 'serif'],
-        body: ['"Inter Tight Variable"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Raleway Variable"', '"Raleway"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        body: ['"Nunito Sans Variable"', '"Nunito Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         display: ['clamp(2.5rem, 5vw, 4.5rem)', { lineHeight: '1.05' }],
@@ -67,6 +67,42 @@ export default {
       },
       transitionTimingFunction: {
         'out-quart': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'in-out-cubic': 'cubic-bezier(0.65, 0, 0.35, 1)',
+      },
+      keyframes: {
+        'float-y': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        'drift': {
+          '0%, 100%': { transform: 'translate3d(0,0,0) scale(1)' },
+          '50%': { transform: 'translate3d(2%,-1%,0) scale(1.04)' },
+        },
+        'shimmer-bg': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        'marquee': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'orbit-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'reveal-mask': {
+          '0%': { 'clip-path': 'inset(0 100% 0 0)' },
+          '100%': { 'clip-path': 'inset(0 0 0 0)' },
+        },
+      },
+      animation: {
+        'float-y': 'float-y 6s ease-in-out infinite',
+        'drift': 'drift 24s ease-in-out infinite',
+        'shimmer-bg': 'shimmer-bg 2.5s linear infinite',
+        'marquee': 'marquee 32s linear infinite',
+        'orbit-slow': 'orbit-slow 32s linear infinite',
+        'reveal-mask': 'reveal-mask 900ms cubic-bezier(0.16,1,0.3,1) both',
       },
     },
   },

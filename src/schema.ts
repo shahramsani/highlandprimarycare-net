@@ -14,8 +14,8 @@ export const localBusinessSchema = () => ({
   url: SITE.url,
   telephone: CONTACT.phone,
   email: CONTACT.email,
-  image: `${SITE.url}/images/logo.png`,
-  logo: `${SITE.url}/images/logo.png`,
+  image: `${SITE.url}/images/logo.svg`,
+  logo: `${SITE.url}/images/logo.svg`,
   priceRange: '$$',
   address: {
     '@type': 'PostalAddress',

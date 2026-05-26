@@ -9,7 +9,7 @@ export const SITE = {
   tagline: 'Your trusted primary care clinic in Sherman, TX',
   description:
     'Highland Primary Care in Sherman, TX offers preventive care, medical weight loss, TRT, and chronic disease management. Now accepting new patients.',
-  url: 'https://highlandprimarycare.net',
+  url: 'https://web.highlandprimarycare.com',
   locale: 'en-US',
   ogImage: '/og-default.jpg',
 } as const;
@@ -46,10 +46,12 @@ export const CONTACT = {
 } as const;
 
 export const BOOKING = {
-  // GHL widget URLs — confirm IDs with Dr. Sani
+  // GHL widget URLs — used for the embedded form on contact/booking sections
   general: 'https://app.highlandprimarycare.cc/widget/form/edEHoM77zSLn1shx3Ae9',
   weightLoss: 'https://app.highlandprimarycare.cc/widget/booking/4pz0StK2hEMnuE5Ngp9Z',
-  trt: 'https://app.highlandprimarycare.cc/widget/form/edEHoM77zSLn1shx3Ae9', // TODO: confirm dedicated TRT widget
+  trt: 'https://app.highlandprimarycare.cc/widget/form/edEHoM77zSLn1shx3Ae9',
+  // Healow online appointment link — all "Book Now" / "Book Visit" CTA buttons
+  bookNow: 'https://healow.com/apps/practice/highland-primary-care-llc-29219?v=2&t=1',
 } as const;
 
 export const NAV: Array<{
@@ -84,7 +86,7 @@ export const PROVIDERS = [
     slug: 'dr-shahram-sani',
     name: 'Dr. Shahram N. Sani, MD',
     title: 'Board-Certified Internal Medicine Physician & Medical Director',
-    photo: '/images/dr-sani.png',
+    photo: '/images/dr-sani.webp',
     specialties: ['Internal Medicine', 'Primary Care', "Men's Health", 'Chronic Disease Mgmt'],
     short:
       'Board-certified Internal Medicine physician with 25+ years of clinical experience. Medical Director at Highland Primary Care. Earned MD from Tehran University of Medical Sciences; residency at Abington Memorial Hospital. Deep expertise in preventive care, chronic disease management, and men\u2019s health.',
@@ -93,7 +95,7 @@ export const PROVIDERS = [
     slug: 'diane-keahey',
     name: 'Diane R. Keahey, DNP, FNP-BC',
     title: 'Doctor of Nursing Practice & Family Nurse Practitioner',
-    photo: '/images/diane-keahey.png',
+    photo: '/images/diane-keahey.webp',
     specialties: ['Family Medicine', 'Primary Care', "Women's Health", 'Geriatric Care'],
     short:
       'Board-certified Family Nurse Practitioner with 24 years of clinical experience and a Doctorate from the University of Tennessee. Holistic, patient-centered care for all ages, with focus on diabetes, hypertension, anxiety, and women\u2019s and geriatric health.',
@@ -102,7 +104,7 @@ export const PROVIDERS = [
     slug: 'dr-amit-warke',
     name: 'Dr. Amit Warke, MD',
     title: 'Board-Certified Family Medicine Physician',
-    photo: '/images/dr-warke.png',
+    photo: '/images/dr-warke.webp',
     specialties: ['Family Medicine', 'Primary Care', 'Preventive Medicine', 'Chronic Disease Mgmt'],
     short:
       'Board-certified Family Medicine physician with 15+ years caring for patients of all ages. MD from Maharashtra Institute of Medical Education and Research, Pune; residency at LSU Health (EA Conway Medical Center). Thorough, compassionate approach to acute and chronic conditions.',
@@ -174,20 +176,21 @@ export const SERVICES = [
   },
 ] as const;
 
-export const INSURANCE = [
-  'Medicare',
-  'Medicaid',
-  'Blue Cross Blue Shield',
-  'Aetna',
-  'Cigna',
-  'UnitedHealthcare',
-  'Humana',
-  'Tricare',
-  'AARP',
-  'Baylor Scott & White',
-  'GEHA',
-  'AmeriGroup',
-] as const;
+export const INSURANCE: Array<{ name: string; logo: string; imgClass?: string }> = [
+  { name: 'Medicare',              logo: '/images/insurance/medicare.png' },
+  { name: 'TMHP Texas Medicaid',   logo: '/images/insurance/tmhp.png' },
+  { name: 'Blue Cross Blue Shield',logo: '/images/insurance/bcbs.png',            imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'Aetna',                 logo: '/images/insurance/aetna.png',               imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'Cigna',                 logo: '/images/insurance/cigna.png',            imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'UnitedHealthcare',      logo: '/images/insurance/united-healthcare-new.png', imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'Humana',                logo: '/images/insurance/humana.png',           imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'Tricare',               logo: '/images/insurance/tricare.png' },
+  { name: 'AARP',                  logo: '/images/insurance/aarp.png' },
+  { name: 'Baylor Scott & White',  logo: '/images/insurance/baylor-scott-white.webp',  imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'GEHA',                  logo: '/images/insurance/geha.png' },
+  { name: 'Amerigroup',            logo: '/images/insurance/amerigroup.webp',           imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+  { name: 'Molina Healthcare',     logo: '/images/insurance/molina.png',           imgClass: 'h-52 w-52 shrink-0 object-contain mix-blend-multiply' },
+];
 
 export const TESTIMONIALS = [
   {

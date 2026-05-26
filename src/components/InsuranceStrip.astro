@@ -8,11 +8,17 @@ import { INSURANCE } from '../config';
   <p class="mx-auto mt-2 max-w-2xl text-meta text-ink-500">
     We accept most major insurance plans. Verify your coverage by calling our office.
   </p>
-  <ul class="mt-6 flex flex-wrap items-center justify-center gap-2">
+  <ul class="mt-6 flex flex-wrap items-center justify-center gap-3">
     {
-      INSURANCE.map((name) => (
-        <li class="rounded-md border border-ink-100 bg-paper-elevated px-3 py-1.5 text-meta font-medium text-ink-700">
-          {name}
+      INSURANCE.map((ins) => (
+        <li class="inline-flex h-14 w-36 items-center justify-center rounded-xl border border-ink-100 bg-paper-elevated px-3">
+          <img
+            src={ins.logo}
+            alt={ins.name}
+            class="max-h-8 max-w-full w-auto h-auto object-contain"
+            loading="lazy"
+            decoding="async"
+          />
         </li>
       ))
     }

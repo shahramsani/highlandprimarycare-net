@@ -6,11 +6,16 @@ import ServiceCard from '../components/ServiceCard.astro';
 import Testimonial from '../components/Testimonial.astro';
 import CTABanner from '../components/CTABanner.astro';
 import TrustStrip from '../components/TrustStrip.astro';
-import InsuranceStrip from '../components/InsuranceStrip.astro';
 import FAQ from '../components/FAQ.astro';
 import BookingEmbed from '../components/BookingEmbed.astro';
+import AnimatedStat from '../components/AnimatedStat.astro';
+import Reveal from '../components/Reveal.astro';
+import Marquee from '../components/Marquee.astro';
+import Parallax from '../components/Parallax.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
 import Icon from '../components/Icon.astro';
-import { PROVIDERS, SERVICES, TESTIMONIALS, BOOKING, CONTACT } from '../config';
+import { PROVIDERS, SERVICES, TESTIMONIALS, INSURANCE, BOOKING, CONTACT } from '../config';
 import { localBusinessSchema, faqSchema } from '../schema';
 
 const homeFAQs = [
@@ -39,6 +44,21 @@ const homeFAQs = [
 const featuredServices = SERVICES.filter((s) => s.featured).concat(
   SERVICES.filter((s) => !s.featured).slice(0, 4)
 );
+
+const outcomeFor: Record<string, string | undefined> = {
+  'medical-weight-loss': 'GLP-1 program · from $99/mo',
+  'testosterone-replacement-therapy': '$79 assessment · physician-supervised',
+  'preventive-services': 'Annual wellness + screenings',
+  'management-of-chronic-conditions': 'A1c · BP · cholesterol care',
+  'acute-care-for-short-term-illnesses': 'Often same-day',
+};
+
+const pillars = [
+  { num: '01', icon: 'award', title: 'Board-Certified', body: 'Every provider is board-certified — Internal Medicine, Family Medicine, and DNP. Real credentials, real depth of training.' },
+  { num: '02', icon: 'users', title: 'Patient-Centered', body: 'We listen first. Appointments are unhurried. Your story matters more than a 7-minute time slot.' },
+  { num: '03', icon: 'microscope', title: 'On-Site Labs', body: 'Bloodwork and routine screenings done in-office — no second trip, no third bill, no waiting weeks.' },
+  { num: '04', icon: 'map-pin', title: 'Local to Sherman', body: 'Long-established Texoma practice. We know our community because we live in it.' },
+];
 ---
 
 <BaseLayout
@@ -46,69 +66,99 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
   description="Highland Primary Care in Sherman, TX offers preventive care, medical weight loss, TRT, and chronic disease management. Now accepting new patients."
   schemaJson={[localBusinessSchema(), faqSchema(homeFAQs)]}
 >
-  <!-- ====================================================
-       HERO
-       ==================================================== -->
-  <section class="relative overflow-hidden bg-paper">
-    <!-- Background accents -->
-    <div class="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand-blue-soft/60 blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-40 -left-20 h-[24rem] w-[24rem] rounded-full bg-brand-red-soft/50 blur-3xl"></div>
+  <link slot="head-preload" rel="preload" href="/images/Clinic_lady.webp" as="image" fetchpriority="high" />
+  <ScrollProgress />
 
-    <div class="container-x relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-22">
-      <div class="animate-fade-up">
-        <span class="eyebrow">Primary Care · Sherman, TX</span>
-        <h1 class="mt-4 font-display text-display font-semibold text-ink-900 text-balance">
-          Your wellness journey<br />
-          <span class="italic text-brand-red">starts here.</span>
+  <!-- ====================================================
+       HERO — cinematic, editorial display, animated reveal
+       ==================================================== -->
+  <section class="hero-frame relative isolate">
+    <!-- Decorative floating orbits behind hero -->
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl animate-drift"></div>
+      <div class="absolute -bottom-40 right-[-6rem] h-[32rem] w-[32rem] rounded-full bg-brand-red/8 blur-3xl animate-drift" style="animation-delay: -8s"></div>
+    </div>
+
+    <div class="container-x relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
+      <div>
+        <span class="eyebrow-dot animate-fade-up">Primary Care · Sherman, TX · Est. 2014</span>
+
+        <h1 class="editorial mt-6 text-display text-ink-900 balance animate-fade-up animation-delay-100">
+          Your wellness<br />
+          journey <em>starts here.</em>
         </h1>
-        <p class="mt-6 max-w-xl text-lead text-ink-500 text-pretty">
-          Comprehensive, personalized primary care from board-certified physicians with 25+ years of combined experience — right here in Texoma.
+
+        <p class="mt-7 max-w-xl text-lead text-ink-500 pretty animate-fade-up animation-delay-300">
+          Comprehensive, unhurried primary care from board-certified physicians with
+          <strong class="font-semibold text-ink-700">64+ years combined experience</strong> — right here in Texoma.
         </p>
 
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={BOOKING.general} class="btn-primary">
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row animate-fade-up animation-delay-400">
+          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
             <Icon name="calendar" size={18} />
             Schedule Your Visit
-          </a>
+            <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+          </MagneticButton>
           <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
             <Icon name="phone" size={18} />
             {CONTACT.phone}
           </a>
         </div>
 
-        <ul class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-meta text-ink-700">
+        <ul class="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-meta text-ink-700 animate-fade-up animation-delay-500">
           <li class="inline-flex items-center gap-2">
-            <Icon name="check-circle" size={16} class="text-brand-blue-dark" />
+            <span class="relative inline-flex h-2.5 w-2.5">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60"></span>
+              <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+            </span>
             Accepting new patients
           </li>
           <li class="inline-flex items-center gap-2">
-            <Icon name="check-circle" size={16} class="text-brand-blue-dark" />
-            Medicare welcome
+            <Icon name="shield-check" size={16} class="text-brand-blue-dark" />
+            Most insurance welcome
           </li>
           <li class="inline-flex items-center gap-2">
-            <Icon name="check-circle" size={16} class="text-brand-blue-dark" />
+            <Icon name="clock" size={16} class="text-brand-blue-dark" />
             Same-day appointments
           </li>
         </ul>
       </div>
 
-      <!-- Hero image -->
-      <div class="relative animate-fade-up animation-delay-200">
-        <div class="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-soft-lg">
-          <img
-            src="/images/dr-sani.png"
-            alt="Dr. Shahram N. Sani, MD — Board-certified Internal Medicine Physician at Highland Primary Care"
-            width="900"
-            height="1125"
-            class="h-full w-full object-cover object-top"
-            fetchpriority="high"
-          />
+      <!-- Hero image — large portrait + floating glass cards + decorative ring -->
+      <div class="relative order-first lg:order-none">
+        <!-- Decorative offset background card -->
+        <div class="absolute -right-3 -top-3 h-full w-full rounded-[2rem] bg-gradient-to-br from-brand-blue/15 via-transparent to-brand-red/12 -z-10"></div>
+
+        <Parallax speed={0.08}>
+          <div class="relative flex items-end justify-center">
+            <img
+              src="/images/Clinic_lady.webp"
+              alt="Highland Primary Care — board-certified physicians in Sherman, TX"
+              width="960"
+              height="1090"
+              class="relative z-10 w-full max-w-[480px] drop-shadow-[0_32px_64px_rgba(10,15,26,0.28)] transition-transform duration-[2200ms] ease-out hover:scale-[1.02]"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </Parallax>
+
+        <!-- Floating "Accepting" pill (top-right) -->
+        <div class="glass absolute right-4 top-4 hidden items-center gap-2 rounded-full px-3.5 py-2 text-meta font-semibold text-ink-900 sm:inline-flex">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+          </span>
+          Accepting new patients
         </div>
-        <!-- Floating credential badge -->
-        <div class="absolute -bottom-6 -left-6 hidden rounded-xl bg-paper-elevated p-5 shadow-soft-lg ring-1 ring-ink-100 md:block">
-          <p class="text-eyebrow font-semibold uppercase tracking-wider text-brand-blue-dark">Medical Director</p>
-          <p class="mt-1 font-display text-h4 text-ink-900">Dr. Shahram N. Sani, MD</p>
-          <p class="text-meta text-ink-500">Board-Certified · 25+ yrs experience</p>
+
+        <!-- Sherman star pin (decorative) -->
+        <div class="absolute -bottom-4 -right-2 hidden md:block animate-float-y" style="animation-delay: -4s">
+          <div class="glass flex items-center gap-2 rounded-full px-3 py-1.5 text-meta font-semibold text-ink-900">
+            <Icon name="map-pin" size={14} class="text-brand-red" />
+            300 N Highland Ave, Sherman
+          </div>
         </div>
       </div>
     </div>
@@ -117,27 +167,53 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
   <TrustStrip />
 
   <!-- ====================================================
-       MEET OUR PROVIDERS
+       BY THE NUMBERS — animated stats with rings
        ==================================================== -->
   <section class="section">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Our Team"
-        title="Meet your care team"
-        lede="Board-certified physicians and providers dedicated to your long-term health and well-being."
-        align="center"
-      />
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">By the numbers</span>
+        <h2 class="editorial mt-3 text-h1 balance">A practice patients keep <em>coming back</em> to.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          The kind of medicine that hasn't changed: real time, real expertise, real follow-through.
+        </p>
+      </Reveal>
+      <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <AnimatedStat value={64} suffix="+" label="Years combined experience" accent />
+        <AnimatedStat value={3} label="Board-certified providers" />
+        <AnimatedStat value={10} label="Services under one roof" />
+        <AnimatedStat value={12} suffix="+" label="Insurance plans accepted" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MEET YOUR PROVIDERS
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Our Team"
+          title="Meet your care team"
+          lede="Board-certified physicians and providers dedicated to your long-term health and well-being."
+          align="center"
+        />
+      </Reveal>
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
         {
-          PROVIDERS.map((p) => (
-            <ProviderCard
-              name={p.name}
-              title={p.title}
-              photo={p.photo}
-              specialties={p.specialties}
-              short={p.short}
-              href={`/${p.slug}/`}
-            />
+          PROVIDERS.map((p, i) => (
+            <Reveal class="h-full" delay={(i * 100) as 0 | 100 | 200 | 300 | 400}>
+              <ProviderCard
+                slug={p.slug}
+                name={p.name}
+                title={p.title}
+                photo={p.photo}
+                specialties={p.specialties}
+                short={p.short}
+                href={`/${p.slug}/`}
+              />
+            </Reveal>
           ))
         }
       </div>
@@ -145,30 +221,35 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
   </section>
 
   <!-- ====================================================
-       SERVICES
+       SERVICES — One place. All your health needs.
        ==================================================== -->
-  <section class="section section-tinted">
+  <section class="section">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Comprehensive Care"
-        title="One place. All your health needs."
-        lede="From routine check-ups to advanced medical weight loss and hormone optimization — we cover the full spectrum of primary care."
-        align="center"
-      />
-      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal>
+        <SectionHeader
+          eyebrow="Comprehensive Care"
+          title="One place. All your health needs."
+          lede="From routine check-ups to advanced medical weight loss and hormone optimization — we cover the full spectrum of primary care."
+          align="center"
+        />
+      </Reveal>
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          featuredServices.map((s) => (
-            <ServiceCard
-              title={s.title}
-              short={s.short}
-              href={`/${s.slug}/`}
-              icon={s.icon}
-              featured={s.featured}
-            />
+          featuredServices.map((s, i) => (
+            <Reveal class="h-full" delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <ServiceCard
+                title={s.title}
+                short={s.short}
+                href={`/${s.slug}/`}
+                icon={s.icon}
+                featured={s.featured}
+                outcome={outcomeFor[s.slug]}
+              />
+            </Reveal>
           ))
         }
       </div>
-      <div class="mt-10 text-center">
+      <div class="mt-14 text-center">
         <a href="/our-services/" class="btn-secondary">
           See All Services
           <Icon name="arrow-right" size={18} />
@@ -178,71 +259,105 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
   </section>
 
   <!-- ====================================================
-       WHY HIGHLAND
+       WHY HIGHLAND — numbered pillars with halo cards
        ==================================================== -->
-  <section class="section">
+  <section class="section section-tinted">
     <div class="container-x">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-        <div>
-          <SectionHeader
-            eyebrow="Why Highland"
-            title="A real medical practice. Real relationships."
-            lede="We're not a chain. We're not a mail-order clinic. We're a long-established Sherman practice that takes the time to know you."
-          />
-          <a href="/about-us/" class="mt-8 inline-flex items-center gap-2 font-semibold text-brand-blue-dark hover:text-brand-blue">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-start">
+        <Reveal>
+          <span class="eyebrow-dot">Why Highland</span>
+          <h2 class="editorial mt-3 text-h1 balance">
+            A real practice. <em>Real</em> relationships.
+          </h2>
+          <p class="mt-5 text-lead text-ink-500 pretty">
+            We're not a chain. We're not a mail-order clinic. We're a long-established Sherman practice that takes the time to know you.
+          </p>
+          <a href="/about-us/" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand-blue-dark hover:text-brand-blue wipe-underline">
             Learn about our practice
             <Icon name="arrow-right" size={18} />
           </a>
-        </div>
-        <ul class="grid gap-4 sm:grid-cols-2">
-          <li class="card">
-            <Icon name="award" size={28} class="text-brand-red" />
-            <h3 class="mt-4 font-display text-h4 text-ink-900">Board-Certified</h3>
-            <p class="mt-2 text-meta text-ink-500">All providers board-certified in their specialty.</p>
-          </li>
-          <li class="card">
-            <Icon name="users" size={28} class="text-brand-red" />
-            <h3 class="mt-4 font-display text-h4 text-ink-900">Patient-Centered</h3>
-            <p class="mt-2 text-meta text-ink-500">We listen first. We don't rush appointments.</p>
-          </li>
-          <li class="card">
-            <Icon name="microscope" size={28} class="text-brand-red" />
-            <h3 class="mt-4 font-display text-h4 text-ink-900">On-Site Labs</h3>
-            <p class="mt-2 text-meta text-ink-500">Bloodwork and screenings done in-office for convenience.</p>
-          </li>
-          <li class="card">
-            <Icon name="map-pin" size={28} class="text-brand-red" />
-            <h3 class="mt-4 font-display text-h4 text-ink-900">Local to Sherman</h3>
-            <p class="mt-2 text-meta text-ink-500">Long-established Texoma practice serving North Texas.</p>
-          </li>
+
+          <!-- Pull quote inside left column -->
+          <Reveal delay={200}>
+            <blockquote class="pullquote mt-10 max-w-md">
+              "We listen first. Appointments are unhurried. Your story matters."
+            </blockquote>
+          </Reveal>
+        </Reveal>
+        <ul class="grid gap-5 sm:grid-cols-2">
+          {
+            pillars.map((p, i) => (
+              <Reveal as="li" class="card-premium halo" delay={((i % 2) * 100) as 0 | 100}>
+                <div class="flex items-start justify-between">
+                  <span class="icon-tile">
+                    <Icon name={p.icon as any} size={22} />
+                  </span>
+                  <span class="font-display text-h4 font-semibold tracking-tight text-ink-100">{p.num}</span>
+                </div>
+                <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{p.title}</h3>
+                <p class="mt-2 text-body text-ink-500">{p.body}</p>
+              </Reveal>
+            ))
+          }
         </ul>
       </div>
     </div>
   </section>
 
   <!-- ====================================================
-       TESTIMONIALS
+       PATIENT VOICES
        ==================================================== -->
-  <section class="section section-tinted">
+  <section class="section">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Patient Voices"
-        title="What our patients say"
-        lede="Real experiences from Highland Primary Care patients in Sherman and the surrounding Texoma area."
-        align="center"
-      />
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        {TESTIMONIALS.map((t) => <Testimonial {...t} />)}
+      <Reveal>
+        <SectionHeader
+          eyebrow="Patient Voices"
+          title="What our patients say"
+          lede="Real experiences from Highland Primary Care patients in Sherman and the surrounding Texoma area."
+          align="center"
+        />
+      </Reveal>
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          TESTIMONIALS.map((t, i) => (
+            <Reveal class="h-full" delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <Testimonial
+                {...t}
+                service={i === 2 ? 'weight-loss' : 'primary'}
+                metric={i === 2 ? 'Lost 35 lbs' : undefined}
+              />
+            </Reveal>
+          ))
+        }
       </div>
     </div>
   </section>
 
   <!-- ====================================================
-       INSURANCE
+       INSURANCE — marquee scroll
        ==================================================== -->
-  <section class="section">
+  <section class="section section-tinted">
     <div class="container-x">
-      <InsuranceStrip />
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Insurance Accepted</span>
+        <h2 class="editorial mt-3 text-h2 balance">Most major plans <em>welcome</em>.</h2>
+        <p class="text-meta text-ink-500">
+          Verify your specific plan by calling our office at <a href={`tel:${CONTACT.phoneRaw}`} class="font-semibold text-brand-blue-dark wipe-underline">{CONTACT.phone}</a>.
+        </p>
+      </Reveal>
+      <div class="mt-10">
+        <Marquee speed="80s" gap="gap-16" fade={false} blendBg="var(--paper-tinted)">
+          {INSURANCE.map((ins) => (
+            <img
+              src={ins.logo}
+              alt={ins.name}
+              class={ins.imgClass ?? 'h-24 w-52 shrink-0 object-contain mix-blend-multiply'}
+              loading="eager"
+              decoding="async"
+            />
+          ))}
+        </Marquee>
+      </div>
     </div>
   </section>
 
@@ -251,13 +366,17 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
        ==================================================== -->
   <section class="section">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Common Questions"
-        title="Frequently asked questions"
-        align="center"
-      />
-      <div class="mx-auto mt-12 max-w-3xl">
-        <FAQ faqs={homeFAQs} />
+      <Reveal>
+        <SectionHeader
+          eyebrow="Common Questions"
+          title="Frequently asked questions"
+          align="center"
+        />
+      </Reveal>
+      <div class="mx-auto mt-14 max-w-3xl">
+        <Reveal>
+          <FAQ faqs={homeFAQs} />
+        </Reveal>
       </div>
     </div>
   </section>
@@ -265,16 +384,20 @@ const featuredServices = SERVICES.filter((s) => s.featured).concat(
   <!-- ====================================================
        BOOKING + CTA
        ==================================================== -->
-  <section class="section bg-paper-tinted">
+  <section class="section bg-white">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Get Started"
-        title="Request an appointment"
-        lede="Fill out the form below and our team will contact you shortly. Or call us directly."
-        align="center"
-      />
-      <div class="mx-auto mt-12 max-w-3xl">
-        <BookingEmbed src={BOOKING.general} />
+      <Reveal>
+        <SectionHeader
+          eyebrow="Get Started"
+          title="Request an appointment"
+          lede="Fill out the form below and our team will contact you shortly. Or call us directly."
+          align="center"
+        />
+      </Reveal>
+      <div class="mx-auto mt-14 max-w-[650px]">
+        <Reveal>
+          <BookingEmbed src={BOOKING.general} />
+        </Reveal>
       </div>
     </div>
   </section>

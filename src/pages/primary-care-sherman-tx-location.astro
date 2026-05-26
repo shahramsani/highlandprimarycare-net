@@ -3,9 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import CTABanner from '../components/CTABanner.astro';
 import TrustStrip from '../components/TrustStrip.astro';
-import InsuranceStrip from '../components/InsuranceStrip.astro';
 import Icon from '../components/Icon.astro';
-import { CONTACT, BOOKING } from '../config';
+import Reveal from '../components/Reveal.astro';
+import AnimatedStat from '../components/AnimatedStat.astro';
+import Marquee from '../components/Marquee.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import { CONTACT, BOOKING, SITE } from '../config';
 import { localBusinessSchema, breadcrumbSchema } from '../schema';
 
 const communities = [
@@ -16,39 +20,227 @@ const communities = [
   'Whitesboro',
   'Van Alstyne',
   'Bells',
-  'Tioga',
-  'Gunter',
-  'Anna',
-  'Whitewright',
   'Tom Bean',
+  'Gunter',
+  'Whitewright',
+];
+
+const directions = [
+  {
+    icon: 'route',
+    from: 'From Denison',
+    body: 'Head south on US-75 for about 10 minutes. Take exit 60 (FM-1417) and head east. Continue to N Highland Ave; the medical building is on the right.',
+  },
+  {
+    icon: 'route',
+    from: 'From Pottsboro',
+    body: 'Take TX-120 E toward Sherman (about 15 minutes). Merge onto US-75 N briefly, then exit at FM-1417 east to N Highland Ave.',
+  },
+  {
+    icon: 'route',
+    from: 'From central Sherman',
+    body: 'Travel north on Travis Street, then west on FM-1417 / Lamberth Street. Turn right onto N Highland Ave. The medical building is on the corner.',
+  },
+];
+
+const access = [
+  { icon: 'map-pin', title: 'Free, close-in parking', body: 'Open surface lot directly adjacent to the medical building. No paid parking, no parking garages, no validation needed.' },
+  { icon: 'accessibility', title: 'Elevator to Suite 455', body: 'Main lobby elevators serve all floors. Highland Primary Care is on the 4th floor — accessible without stairs.' },
+  { icon: 'shield-check', title: 'ADA-compliant', body: 'Building entrances, restrooms and exam rooms meet ADA standards. Wheelchair-accessible throughout.' },
 ];
 ---
 
 <BaseLayout
-  title="Primary Care Clinic Sherman TX — Location, Hours & Directions"
-  description="Highland Primary Care is conveniently located at 300 N Highland Ave Suite 455 in Sherman, TX. Same-day appointments, on-site labs, free parking."
+  title="Primary Care Clinic in Sherman TX | Highland Primary Care Location"
+  description="Highland Primary Care is at 300 N Highland Ave, Suite 455, Sherman, TX 75092. Serving Sherman, Denison, Pottsboro and the Texoma region with on-site labs."
   schemaJson={[
     localBusinessSchema(),
     breadcrumbSchema([
-      { name: 'Home', url: 'https://highlandprimarycare.net/' },
-      { name: 'Location', url: 'https://highlandprimarycare.net/primary-care-sherman-tx-location/' },
+      { name: 'Home', url: `${SITE.url}/` },
+      { name: 'Location', url: `${SITE.url}/primary-care-sherman-tx-location/` },
     ]),
   ]}
 >
-  <!-- HERO -->
-  <section class="bg-paper">
-    <div class="container-x py-16 lg:py-22">
-      <SectionHeader
-        as="h1"
-        eyebrow="Sherman, Texas"
-        title="Conveniently located in the heart of Texoma"
-        lede="Highland Primary Care serves Sherman, Denison, and the broader Grayson County region with easy parking, same-day appointments, and on-site labs."
-      />
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href={BOOKING.general} class="btn-primary">
-          <Icon name="calendar" size={18} />
-          Schedule Your Visit
-        </a>
+  <ScrollProgress />
+
+  <!-- ====================================================
+       HERO
+       ==================================================== -->
+  <section class="hero-frame relative isolate">
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl animate-drift"></div>
+      <div class="absolute -bottom-40 right-[-6rem] h-[32rem] w-[32rem] rounded-full bg-brand-red/8 blur-3xl animate-drift" style="animation-delay: -8s"></div>
+    </div>
+
+    <div class="container-x relative py-16 lg:py-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="eyebrow-dot animate-fade-up">Primary Care · Sherman, TX</span>
+        <h1 class="editorial mt-6 text-display text-ink-900 balance animate-fade-up animation-delay-100">
+          <em>Located</em> in the heart<br />
+          of Texoma.
+        </h1>
+        <p class="mx-auto mt-7 max-w-2xl text-lead text-ink-500 pretty animate-fade-up animation-delay-300">
+          Highland Primary Care serves <strong class="font-semibold text-ink-700">Sherman, Denison, Pottsboro, Howe, Whitesboro, Van Alstyne, Bells, Tom Bean, Gunter and Whitewright</strong> — all from one easy-access Sherman office with free parking and on-site labs.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-up animation-delay-400">
+          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
+            <Icon name="calendar" size={18} />
+            Schedule Your Visit
+            <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+          </MagneticButton>
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT.address.full)}`}
+            target="_blank"
+            rel="noopener"
+            class="btn-secondary"
+          >
+            <Icon name="map-pin" size={18} />
+            Get Directions
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <!-- ====================================================
+       STATS STRIP
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal class="section-head text-center mx-auto">
+        <span class="eyebrow-dot">Serving Texoma</span>
+        <h2 class="editorial mt-3 text-h1 balance">A clinic <em>built around</em> our community.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Patients travel from across Grayson County and the broader Texoma region for our care.
+        </p>
+      </Reveal>
+      <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <AnimatedStat value={10} label="Texoma cities served" />
+        <AnimatedStat value={25} suffix="+" label="Years in the community" accent />
+        <AnimatedStat value={5} label="Days/week we're open" />
+        <AnimatedStat value={100} suffix="%" label="On-site labs" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MAP + ADDRESS BLOCK
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <div class="grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+        <div class="space-y-6">
+          <Reveal>
+            <div class="card-premium halo">
+              <div class="flex items-start gap-4">
+                <span class="icon-tile icon-tile-red shrink-0">
+                  <Icon name="map-pin" size={22} />
+                </span>
+                <div>
+                  <h2 class="font-display text-h3 font-semibold text-ink-900">Address</h2>
+                  <address class="mt-3 not-italic text-body text-ink-700">
+                    {CONTACT.address.street}<br />
+                    {CONTACT.address.city}, {CONTACT.address.state} {CONTACT.address.zip}
+                  </address>
+                  <p class="mt-3 text-meta text-ink-500">
+                    Inside the 300 N Highland Ave medical building. Take the main lobby elevator to the 4th floor.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div class="card-premium halo">
+              <div class="flex items-start gap-4">
+                <span class="icon-tile shrink-0">
+                  <Icon name="clock" size={22} />
+                </span>
+                <div class="w-full">
+                  <h2 class="font-display text-h3 font-semibold text-ink-900">Office hours</h2>
+                  <ul class="mt-4 divide-y divide-ink-100 text-body">
+                    {
+                      CONTACT.hours.map((h) => (
+                        <li class="flex items-center justify-between gap-3 py-2.5">
+                          <span class="font-medium text-ink-700">{h.day}</span>
+                          <span class={h.open && h.close ? 'font-semibold text-ink-900' : 'text-ink-300'}>
+                            {h.open && h.close ? `${h.open} – ${h.close}` : 'Closed'}
+                          </span>
+                        </li>
+                      ))
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <a href={`tel:${CONTACT.phoneRaw}`} class="card-premium halo block">
+              <div class="flex items-start gap-4">
+                <span class="icon-tile icon-tile-red shrink-0">
+                  <Icon name="phone" size={22} />
+                </span>
+                <div>
+                  <p class="text-eyebrow font-semibold uppercase tracking-[0.12em] text-brand-blue-dark">Call us</p>
+                  <p class="mt-1 font-display text-h3 font-semibold text-ink-900">{CONTACT.phone}</p>
+                  <p class="mt-2 text-meta text-ink-500">Same-day appointments often available.</p>
+                </div>
+              </div>
+            </a>
+          </Reveal>
+        </div>
+
+        <Reveal delay={100}>
+          <div class="aspect-[4/5] w-full overflow-hidden rounded-2xl ring-1 ring-ink-100 shadow-[0_24px_56px_-24px_rgba(10,15,26,0.18)] lg:aspect-auto lg:h-full lg:min-h-[560px]">
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address.full)}&output=embed`}
+              title="Highland Primary Care — 300 N Highland Ave Suite 455, Sherman TX 75092"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="h-full w-full"
+              style="border:0;"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       DRIVING DIRECTIONS
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Driving Directions</span>
+        <h2 class="editorial mt-3 text-h1 balance">Easy to find. <em>Easy</em> to park.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Located near the corner of N Highland Ave and FM-1417, just off US-75. Free, close-in parking right at the entrance.
+        </p>
+      </Reveal>
+
+      <ul class="mt-14 grid gap-5 md:grid-cols-3">
+        {
+          directions.map((d, i) => (
+            <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <li class="step-card h-full">
+                <span class="step-card-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="icon-tile">
+                  <Icon name={d.icon as any} size={22} />
+                </span>
+                <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{d.from}</h3>
+                <p class="mt-2 text-body text-ink-500">{d.body}</p>
+              </li>
+            </Reveal>
+          ))
+        }
+      </ul>
+
+      <div class="mt-10 text-center">
         <a
           href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT.address.full)}`}
           target="_blank"
@@ -56,122 +248,60 @@ const communities = [
           class="btn-secondary"
         >
           <Icon name="map-pin" size={18} />
-          Get Directions
+          Open in Google Maps
+          <Icon name="arrow-up-right" size={16} />
         </a>
       </div>
     </div>
   </section>
 
-  <TrustStrip />
-
-  <!-- INFO + MAP -->
-  <section class="section">
-    <div class="container-x grid gap-8 lg:grid-cols-2">
-      <div class="space-y-6">
-        <div class="card">
-          <Icon name="map-pin" size={28} class="text-brand-red" />
-          <h2 class="mt-4 font-display text-h3">Address</h2>
-          <address class="mt-2 not-italic text-body text-ink-700">
-            {CONTACT.address.street}<br />
-            {CONTACT.address.city}, {CONTACT.address.state} {CONTACT.address.zip}
-          </address>
-          <p class="mt-3 text-meta text-ink-500">
-            Located inside the 300 N Highland Ave medical building. Suite 455 is on the 4th floor — take the main elevator.
-          </p>
-        </div>
-
-        <div class="card">
-          <Icon name="clock" size={28} class="text-brand-red" />
-          <h2 class="mt-4 font-display text-h3">Office Hours</h2>
-          <ul class="mt-3 space-y-1 text-body text-ink-700">
-            {
-              CONTACT.hours.map((h) => (
-                <li class="flex justify-between gap-3">
-                  <span class="font-medium">{h.day}</span>
-                  <span class="text-ink-500">{h.open && h.close ? `${h.open} – ${h.close}` : 'Closed'}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-
-        <div class="card">
-          <Icon name="phone" size={28} class="text-brand-red" />
-          <h2 class="mt-4 font-display text-h3">Contact</h2>
-          <p class="mt-2 text-body">
-            Phone: <a href={`tel:${CONTACT.phoneRaw}`} class="font-semibold text-brand-blue-dark hover:underline">{CONTACT.phone}</a>
-          </p>
-          <p class="mt-1 text-body">
-            Email: <a href={`mailto:${CONTACT.email}`} class="font-semibold text-brand-blue-dark hover:underline">{CONTACT.email}</a>
-          </p>
-        </div>
-      </div>
-
-      <div class="overflow-hidden rounded-xl border border-ink-100 shadow-soft-md">
-        <iframe
-          src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address.full)}&output=embed`}
-          title="Highland Primary Care location map"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          style="border:0; width:100%; height:100%; min-height: 520px;"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-  </section>
-
-  <!-- COMMUNITIES SERVED -->
+  <!-- ====================================================
+       PARKING & ACCESSIBILITY
+       ==================================================== -->
   <section class="section section-tinted">
     <div class="container-x">
-      <SectionHeader
-        eyebrow="Service Area"
-        title="Serving the Texoma region"
-        lede="Patients travel from across Grayson County and surrounding areas for our care."
-        align="center"
-      />
-      <ul class="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-2">
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Parking & Accessibility</span>
+        <h2 class="editorial mt-3 text-h1 balance">Designed for <em>easy access</em>.</h2>
+      </Reveal>
+
+      <ul class="mt-14 grid gap-5 md:grid-cols-3">
         {
-          communities.map((c) => (
-            <li class="rounded-full bg-paper-elevated px-4 py-2 text-meta font-medium text-ink-700 ring-1 ring-ink-100">
-              {c}, TX
-            </li>
+          access.map((a, i) => (
+            <Reveal delay={((i % 3) * 100) as 0 | 100 | 200}>
+              <li class="card-premium halo h-full">
+                <span class="icon-tile">
+                  <Icon name={a.icon as any} size={22} />
+                </span>
+                <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{a.title}</h3>
+                <p class="mt-2 text-body text-ink-500">{a.body}</p>
+              </li>
+            </Reveal>
           ))
         }
       </ul>
     </div>
   </section>
 
-  <!-- LOCAL CONTEXT COPY -->
+  <!-- ====================================================
+       AREAS SERVED MARQUEE
+       ==================================================== -->
   <section class="section">
     <div class="container-x">
-      <div class="prose-medical mx-auto">
-        <h2>Your primary care home in Sherman, Texas</h2>
-        <p>
-          Highland Primary Care has been a fixture of the Sherman medical community for years. Our clinic, located inside the 300 N Highland Ave medical building, is just minutes from Wilson N. Jones Regional Medical Center, Texoma Medical Center, and the major Sherman residential neighborhoods.
-        </p>
-        <p>
-          We're easy to find: Highland Avenue runs north-south through Sherman, and we're located near the intersection with FM-1417. Free parking is available in the medical building lot. The building is fully accessible with elevator service to all floors.
-        </p>
-        <h3>Why patients across Texoma choose Highland</h3>
-        <ul>
-          <li><strong>Same-day appointments</strong> for acute illnesses and urgent concerns.</li>
-          <li><strong>On-site labs</strong> — most bloodwork done at your visit, no second trip.</li>
-          <li><strong>Most major insurance accepted</strong>, including Medicare and Medicaid.</li>
-          <li><strong>Board-certified physicians</strong> who take time to listen.</li>
-          <li><strong>One practice for the whole family</strong> — from chronic care to medical weight loss.</li>
-        </ul>
-        <h3>Getting here</h3>
-        <p>
-          From US-75: Take exit 60 (FM-1417) and head east. The medical building is at the corner of Highland Ave. From downtown Sherman: Travel north on Travis Street, then west on FM-1417. From Denison: Take US-75 South to exit 60.
-        </p>
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Areas Served</span>
+        <h2 class="editorial mt-3 text-h2 balance">All of <em>Texoma</em>, one office.</h2>
+      </Reveal>
+      <div class="mt-10">
+        <Marquee speed="36s">
+          {communities.map((c) => (
+            <span class="inline-flex items-center gap-2 rounded-xl border border-ink-100 bg-paper-elevated px-5 py-3 text-meta font-semibold text-ink-700">
+              <Icon name="map-pin" size={16} class="text-brand-red" />
+              {c}, TX
+            </span>
+          ))}
+        </Marquee>
       </div>
-    </div>
-  </section>
-
-  <!-- INSURANCE -->
-  <section class="section section-tinted">
-    <div class="container-x">
-      <InsuranceStrip />
     </div>
   </section>
 

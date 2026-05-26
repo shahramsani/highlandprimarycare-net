@@ -1,0 +1,86 @@
+---
+/**
+ * MagneticButton — wraps an interactive element so it subtly tilts toward the cursor.
+ *
+ *   <MagneticButton class="btn-primary" href="/book">
+ *     Book a visit
+ *   </MagneticButton>
+ *
+ * Use sparingly on hero CTAs and pricing-tier highlights. Disabled with prefers-reduced-motion.
+ */
+
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  class?: string;
+  strength?: number;
+}
+
+const {
+  href,
+  type,
+  class: classProp = '',
+  strength = 0.25,
+} = Astro.props;
+---
+
+{href ? (
+  <a
+    href={href}
+    data-magnetic
+    data-strength={strength}
+    class:list={['btn-magnetic', classProp]}
+  >
+    <span class="magnet-inner">
+      <slot />
+    </span>
+  </a>
+) : (
+  <button
+    type={type ?? 'button'}
+    data-magnetic
+    data-strength={strength}
+    class:list={['btn-magnetic', classProp]}
+  >
+    <span class="magnet-inner">
+      <slot />
+    </span>
+  </button>
+)}
+
+<script is:inline>
+  (function () {
+    function init() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const els = document.querySelectorAll('[data-magnetic]:not([data-magnet-bound])');
+      els.forEach((el) => {
+        el.setAttribute('data-magnet-bound', '1');
+        const inner = el.querySelector('.magnet-inner');
+        const strength = parseFloat(el.getAttribute('data-strength') || '0.25');
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          el.style.transform = `translate3d(${x * strength}px, ${y * strength}px, 0)`;
+          if (inner) inner.style.transform = `translate3d(${x * strength * 0.4}px, ${y * strength * 0.4}px, 0)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = '';
+          if (inner) inner.style.transform = '';
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', init);
+    if (document.readyState !== 'loading') init();
+  })();
+</script>
+
+<style>
+  .magnet-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+</style>

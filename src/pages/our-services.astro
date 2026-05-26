@@ -4,41 +4,186 @@ import SectionHeader from '../components/SectionHeader.astro';
 import CTABanner from '../components/CTABanner.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import Icon from '../components/Icon.astro';
-import { SERVICES } from '../config';
-import { localBusinessSchema } from '../schema';
+import Reveal from '../components/Reveal.astro';
+import Marquee from '../components/Marquee.astro';
+import MagneticButton from '../components/MagneticButton.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import { SERVICES, INSURANCE, BOOKING, CONTACT, SITE } from '../config';
+import { breadcrumbSchema } from '../schema';
+
+const outcomeFor: Record<string, string | undefined> = {
+  'medical-weight-loss': 'GLP-1 program · from $99/mo',
+  'testosterone-replacement-therapy': '$79 assessment · physician-supervised',
+};
+
+const reasons = [
+  { icon: 'shield-check', title: 'One-stop primary care', body: 'Preventive care, chronic disease, mental health, weight loss and TRT — one team, one chart, one continuous relationship.' },
+  { icon: 'clock', title: 'Same-day acute care', body: 'Sinus infections, UTIs, sudden symptoms — often handled the same day you call, by a doctor who already knows your history.' },
+  { icon: 'flask', title: 'On-site labs', body: 'Most bloodwork, A1c, lipid panels and routine screenings are completed in-office. No second trip, no extra bill.' },
+  { icon: 'route', title: 'Coordinated specialist referrals', body: 'Trusted Texoma specialists. Records and follow-up loop back to your PCP so nothing falls through the cracks.' },
+];
 ---
 
 <BaseLayout
-  title="Primary Care Services Sherman TX — Highland Primary Care"
-  description="Comprehensive primary care services in Sherman, TX. From preventive care to medical weight loss, TRT, and chronic disease management."
-  schemaJson={localBusinessSchema()}
+  title="Primary Care Services Sherman TX | Highland Primary Care"
+  description="Comprehensive primary care in Sherman, TX — preventive care, chronic disease management, mental health, medical weight loss, TRT, and more under one roof."
+  schemaJson={breadcrumbSchema([
+    { name: 'Home', url: `${SITE.url}/` },
+    { name: 'Services', url: `${SITE.url}/our-services/` },
+  ])}
 >
-  <section class="bg-paper">
-    <div class="container-x py-16 lg:py-22">
-      <SectionHeader
-        as="h1"
-        eyebrow="Our Services"
-        title="Comprehensive primary care for the whole family"
-        lede="From routine check-ups to specialized medical weight loss and hormone optimization, we cover the full spectrum of primary care under one roof."
-        align="center"
-      />
+  <ScrollProgress />
+
+  <!-- ====================================================
+       HERO
+       ==================================================== -->
+  <section class="hero-frame relative isolate">
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl animate-drift"></div>
+      <div class="absolute -bottom-40 right-[-6rem] h-[32rem] w-[32rem] rounded-full bg-brand-red/8 blur-3xl animate-drift" style="animation-delay: -8s"></div>
+    </div>
+
+    <div class="container-x relative py-16 lg:py-28">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="eyebrow-dot animate-fade-up">Comprehensive Care</span>
+        <h1 class="editorial mt-6 text-display text-ink-900 balance animate-fade-up animation-delay-100">
+          <em>Comprehensive</em> primary care<br />
+          for the whole family.
+        </h1>
+        <p class="mx-auto mt-7 max-w-2xl text-lead text-ink-500 pretty animate-fade-up animation-delay-300">
+          From routine wellness exams to advanced medical weight loss and hormone optimization — every Highland service is delivered by board-certified physicians, in one Sherman office, with on-site labs.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-up animation-delay-400">
+          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
+            <Icon name="calendar" size={18} />
+            Schedule Your Visit
+            <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
+          </MagneticButton>
+          <a href={`tel:${CONTACT.phoneRaw}`} class="btn-secondary">
+            <Icon name="phone" size={18} />
+            {CONTACT.phone}
+          </a>
+        </div>
+
+        <ul class="mt-12 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-meta text-ink-700 animate-fade-up animation-delay-500">
+          <li class="inline-flex items-center gap-2">
+            <Icon name="shield-check" size={16} class="text-brand-blue-dark" />
+            Board-certified providers
+          </li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="flask" size={16} class="text-brand-blue-dark" />
+            On-site labs
+          </li>
+          <li class="inline-flex items-center gap-2">
+            <Icon name="clock" size={16} class="text-brand-blue-dark" />
+            Same-day appointments
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
-  <section class="pb-16">
+  <!-- ====================================================
+       SERVICES GRID — all 10
+       ==================================================== -->
+  <section class="section">
     <div class="container-x">
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Full spectrum of care</span>
+        <h2 class="editorial mt-3 text-h1 balance">Every service, <em>one office</em>.</h2>
+        <p class="text-lead text-ink-500 pretty">
+          Ten services under one roof — designed to keep your care continuous, your records connected and your trips to the office to a minimum.
+        </p>
+      </Reveal>
+
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          SERVICES.map((s) => (
-            <ServiceCard
-              title={s.title}
-              short={s.short}
-              href={`/${s.slug}/`}
-              icon={s.icon}
-              featured={s.featured}
-            />
-          ))
+          SERVICES.map((s, i) => {
+            const isLoneCard = SERVICES.length % 3 === 1 && i === SERVICES.length - 1;
+            return (
+              <Reveal
+                delay={((i % 3) * 100) as 0 | 100 | 200}
+                class:list={[isLoneCard ? 'sm:col-span-2 lg:col-start-2 lg:col-span-1' : '']}
+              >
+                <ServiceCard
+                  title={s.title}
+                  short={s.short}
+                  href={`/${s.slug}/`}
+                  icon={s.icon}
+                  featured={s.featured}
+                  outcome={outcomeFor[s.slug]}
+                />
+              </Reveal>
+            );
+          })
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       WHY CHOOSE HIGHLAND
+       ==================================================== -->
+  <section class="section section-tinted">
+    <div class="container-x">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-start">
+        <Reveal>
+          <span class="eyebrow-dot">Why Highland</span>
+          <h2 class="editorial mt-3 text-h1 balance">
+            One practice. <em>All</em> your health needs.
+          </h2>
+          <p class="mt-5 text-lead text-ink-500 pretty">
+            The advantages of a long-established primary care practice — visible in how we structure your care, how we share records, and how quickly we can see you when something goes wrong.
+          </p>
+          <a href="/about-us/" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand-blue-dark hover:text-brand-blue wipe-underline">
+            About our practice
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </Reveal>
+
+        <ul class="grid gap-5 sm:grid-cols-2">
+          {
+            reasons.map((r, i) => (
+              <Reveal delay={((i % 2) * 100) as 0 | 100}>
+                <li class="card-premium halo h-full">
+                  <span class="icon-tile">
+                    <Icon name={r.icon as any} size={22} />
+                  </span>
+                  <h3 class="mt-5 font-display text-h4 font-semibold text-ink-900">{r.title}</h3>
+                  <p class="mt-2 text-body text-ink-500">{r.body}</p>
+                </li>
+              </Reveal>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       INSURANCE MARQUEE
+       ==================================================== -->
+  <section class="section">
+    <div class="container-x">
+      <Reveal class="section-head mx-auto text-center">
+        <span class="eyebrow-dot">Insurance Accepted</span>
+        <h2 class="editorial mt-3 text-h2 balance">Most major plans <em>welcome</em>.</h2>
+        <p class="text-meta text-ink-500">
+          Verify your specific plan by calling our office at <a href={`tel:${CONTACT.phoneRaw}`} class="font-semibold text-brand-blue-dark wipe-underline">{CONTACT.phone}</a>.
+        </p>
+      </Reveal>
+      <div class="mt-10">
+        <Marquee speed="80s" gap="gap-16" fade={false} blendBg="var(--paper-tinted)">
+          {INSURANCE.map((ins) => (
+            <img
+              src={ins.logo}
+              alt={ins.name}
+              class={ins.imgClass ?? 'h-24 w-52 shrink-0 object-contain mix-blend-multiply'}
+              loading="eager"
+              decoding="async"
+            />
+          ))}
+        </Marquee>
       </div>
     </div>
   </section>

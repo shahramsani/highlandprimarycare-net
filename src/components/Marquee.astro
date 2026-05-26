@@ -1,0 +1,32 @@
+---
+/**
+ * Marquee — infinite-scrolling row. Children are duplicated for seamless loop.
+ *
+ *   <Marquee speed="32s">
+ *     <Item /> <Item /> ...
+ *   </Marquee>
+ */
+interface Props {
+  speed?: string;
+  reverse?: boolean;
+  gap?: string;
+  class?: string;
+  fade?: boolean;
+  blendBg?: string;
+}
+const { speed = '32s', reverse = false, gap = 'gap-10', class: classProp = '', fade = true, blendBg } = Astro.props;
+---
+
+<div class:list={[fade && 'mask-x', 'relative w-full overflow-hidden', classProp]}>
+  <div
+    class:list={['flex w-max animate-marquee', gap]}
+    style={`animation-duration: ${speed}; ${reverse ? 'animation-direction: reverse;' : ''}${blendBg ? ` background-color: ${blendBg};` : ''}`}
+  >
+    <div class:list={['flex shrink-0 items-center', gap]}>
+      <slot />
+    </div>
+    <div class:list={['flex shrink-0 items-center', gap]} aria-hidden="true">
+      <slot />
+    </div>
+  </div>
+</div>

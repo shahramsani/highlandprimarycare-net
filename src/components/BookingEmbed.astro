@@ -2,23 +2,66 @@
 interface Props {
   src: string;
   title?: string;
-  height?: number;
 }
-const { src, title = 'Book your visit', height = 720 } = Astro.props;
+const { src, title = 'Request an appointment' } = Astro.props;
 ---
 
-<div class="rounded-xl border border-ink-100 bg-paper-elevated p-1 shadow-soft-md">
+<div class="booking-embed-wrap">
   <iframe
     src={src}
     title={title}
     loading="lazy"
     width="100%"
-    style={`min-height:${height}px;border:0;border-radius:0.75rem;`}
+    scrolling="no"
+    class="booking-embed-iframe"
     allow="payment; fullscreen"
   ></iframe>
+
+  <noscript>
+    <p class="mt-4 text-center text-meta text-ink-500">
+      Booking form requires JavaScript.
+      <a href={src} target="_blank" rel="noopener" class="font-semibold text-brand-blue-dark wipe-underline">
+        Open booking page →
+      </a>
+    </p>
+  </noscript>
 </div>
-<noscript>
-  <p class="mt-2 text-meta text-ink-500">
-    Booking widget requires JavaScript. <a href={src} class="underline">Open in a new window</a>.
-  </p>
-</noscript>
+
+<style>
+  .booking-embed-wrap {
+    overflow: hidden;
+  }
+
+  .booking-embed-iframe {
+    display: block;
+    width: 100%;
+    /* GHL card is 797px tall; add 60px top + 38px bottom margins to clip padding/shadow */
+    min-height: 900px;
+    /* Clip GHL card's top padding (60px) */
+    margin-top: -60px;
+    /* Clip GHL card's bottom padding (30px) + box-shadow (~8px) */
+    margin-bottom: -38px;
+    border: none;
+    background: transparent;
+  }
+</style>
+
+<!-- Auto-resize the iframe to match GHL's content height -->
+<script>
+  (function () {
+    function initResize() {
+      const iframes = document.querySelectorAll('.booking-embed-iframe');
+      iframes.forEach((iframe) => {
+        const el = iframe as HTMLIFrameElement;
+        window.addEventListener('message', (e) => {
+          if (!e.data || typeof e.data !== 'object') return;
+          if (e.data.type === 'form-height' && typeof e.data.height === 'number') {
+            el.style.minHeight = `${e.data.height + 40}px`;
+          }
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', initResize);
+    if (document.readyState !== 'loading') initResize();
+  })();
+</script>
