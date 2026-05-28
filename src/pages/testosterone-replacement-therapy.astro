@@ -180,7 +180,7 @@ const breadcrumb = breadcrumbSchema([
         </p>
 
         <div class="mt-9 flex flex-col gap-3 sm:flex-row animate-fade-up animation-delay-400">
-          <MagneticButton href={BOOKING.bookNow} class="btn-primary group">
+          <MagneticButton href={BOOKING.bookNow} target="_blank" rel="noopener noreferrer" class="btn-primary group">
             <Icon name="calendar" size={18} />
             Book $79 Assessment
             <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -254,7 +254,7 @@ const breadcrumb = breadcrumbSchema([
               </li>
             </ul>
 
-            <MagneticButton href={BOOKING.bookNow} class="btn-primary mt-6 w-full justify-center">
+            <MagneticButton href={BOOKING.bookNow} target="_blank" rel="noopener noreferrer" class="btn-primary mt-6 w-full justify-center">
               Claim Your Spot
               <Icon name="arrow-right" size={16} />
             </MagneticButton>
@@ -414,6 +414,8 @@ const breadcrumb = breadcrumbSchema([
                 <div class="mt-8 flex-1 flex items-end">
                   <MagneticButton
                     href={BOOKING.bookNow}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     class:list={['w-full justify-center', tier.featured ? 'btn-primary' : 'btn-secondary']}
                   >
                     Get Started

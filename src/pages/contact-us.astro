@@ -47,7 +47,7 @@ import { localBusinessSchema, breadcrumbSchema } from '../schema';
             <Icon name="phone" size={18} />
             {CONTACT.phone}
           </a>
-          <MagneticButton href={BOOKING.bookNow} class="btn-secondary group">
+          <MagneticButton href={BOOKING.bookNow} target="_blank" rel="noopener noreferrer" class="btn-secondary group">
             <Icon name="calendar" size={18} />
             Book Online
             <Icon name="arrow-right" size={16} class="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -92,7 +92,7 @@ import { localBusinessSchema, breadcrumbSchema } from '../schema';
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT.address.full)}`}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   class="mt-6 inline-flex items-center gap-1.5 font-semibold text-brand-blue-dark hover:text-brand-blue wipe-underline"
                 >
                   Get directions

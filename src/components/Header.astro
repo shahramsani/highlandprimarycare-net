@@ -88,7 +88,7 @@ import Icon from './Icon.astro';
       <a href={`tel:${CONTACT.phoneRaw}`} class="hidden text-[0.9375rem] font-semibold text-ink-700 hover:text-brand-red md:inline">
         {CONTACT.phone}
       </a>
-      <a href={BOOKING.bookNow} class="btn-primary hidden md:inline-flex">
+      <a href={BOOKING.bookNow} target="_blank" rel="noopener noreferrer" class="btn-primary hidden md:inline-flex">
         <Icon name="calendar" size={16} />
         Book Visit
       </a>
@@ -145,7 +145,7 @@ import Icon from './Icon.astro';
           ))
         }
       </ul>
-      <a href={BOOKING.bookNow} class="btn-primary mt-4 w-full">
+      <a href={BOOKING.bookNow} target="_blank" rel="noopener noreferrer" class="btn-primary mt-4 w-full">
         <Icon name="calendar" size={16} />
         Book Visit
       </a>
