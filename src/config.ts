@@ -40,7 +40,7 @@ export const CONTACT = {
   ],
   socials: {
     facebook: 'https://www.facebook.com/highlandprimarycare1',
-    instagram: 'https://www.instagram.com/highland.primary.care/',
+    instagram: 'https://www.instagram.com/highlandprimarycarellc/',
     youtube: 'https://www.youtube.com/highlandprimarycare',
   },
 } as const;

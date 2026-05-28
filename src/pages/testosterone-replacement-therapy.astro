@@ -385,9 +385,10 @@ const breadcrumb = breadcrumbSchema([
             <Reveal delay={((i * 100) as 0 | 100 | 200)}>
               <article class:list={[tier.featured ? 'price-card-featured' : 'price-card', 'h-full flex flex-col']}>
                 {tier.featured && (
-                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-[0.12em] text-white shadow-md">
+                  <div class="-mx-6 -mt-6 mb-6 flex items-center justify-center gap-1.5 bg-brand-red py-3 text-eyebrow font-semibold uppercase tracking-[0.1em] text-white md:-mx-8 md:-mt-8">
+                    <Icon name="star" size={12} class="fill-current" />
                     Most Popular
-                  </span>
+                  </div>
                 )}
                 <h3 class="font-display text-h3 font-semibold text-ink-900">{tier.name}</h3>
                 <p class="mt-1.5 text-meta text-ink-500">{tier.tagline}</p>
