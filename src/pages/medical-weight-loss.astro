@@ -363,12 +363,12 @@ const breadcrumbItems = [
             <Reveal delay={((i % 4) * 100) as 0 | 100 | 200 | 300}>
               <div class={tier.featured ? 'price-card-featured h-full' : 'price-card h-full'}>
                 {tier.featured && tier.badge && (
-                  <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-[0.1em] text-white">
+                  <span class="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-brand-red px-3 py-1 text-eyebrow font-semibold uppercase tracking-[0.1em] text-white">
                     <Icon name="star" size={12} class="fill-current" />
                     {tier.badge}
                   </span>
                 )}
-                <h3 class={tier.featured ? 'mt-3 font-display text-h4 font-semibold text-ink-900' : 'font-display text-h4 font-semibold text-ink-900'}>
+                <h3 class="font-display text-h4 font-semibold text-ink-900">
                   {tier.name}
                 </h3>
                 <p class="mt-1 text-meta text-ink-500">{tier.dose}</p>
