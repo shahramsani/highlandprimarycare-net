@@ -68,6 +68,20 @@ const breadcrumb = breadcrumbSchema([
         <p class="mt-4 text-lead text-ink-500 text-pretty">{article.description}</p>
       </header>
 
+      {article.image && (
+        <div class="mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl" style="height: 400px;">
+          <img
+            src={article.image}
+            alt={article.imageAlt}
+            width="1200"
+            height="400"
+            loading="eager"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      )}
+
       <div class="prose-medical mx-auto mt-12" set:html={article.body}></div>
 
       <div class="mx-auto mt-16 max-w-3xl border-t border-ink-100 pt-8">

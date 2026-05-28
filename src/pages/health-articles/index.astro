@@ -87,9 +87,21 @@ const topics = [
                   <a href={`/health-articles/${a.slug}/`} class="absolute inset-0 z-10" aria-label={a.title}></a>
 
                   <div class="relative -mx-6 -mt-6 mb-6 aspect-[16/9] overflow-hidden rounded-t-xl bg-gradient-to-br from-brand-blue-soft via-paper-tinted to-brand-red-soft md:-mx-8 md:-mt-8">
-                    <div class="absolute inset-0 flex items-center justify-center text-brand-blue-dark/40">
-                      <Icon name={cat.icon} size={64} />
-                    </div>
+                    {a.image ? (
+                      <img
+                        src={a.image}
+                        alt={a.imageAlt}
+                        width="640"
+                        height="360"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div class="absolute inset-0 flex items-center justify-center text-brand-blue-dark/40">
+                        <Icon name={cat.icon} size={64} />
+                      </div>
+                    )}
                     <span class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-brand-blue-dark backdrop-blur">
                       <Icon name={cat.icon} size={12} />
                       {cat.label}

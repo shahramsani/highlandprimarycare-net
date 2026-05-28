@@ -9,6 +9,8 @@ export type Article = {
   description: string;
   date: string; // ISO date
   readingMinutes: number;
+  image: string; // Unsplash URL for hero and thumbnail
+  imageAlt: string;
   body: string; // HTML (rendered via set:html)
 };
 
@@ -20,6 +22,8 @@ export const ARTICLES: Article[] = [
       'A practical guide to selecting a primary care physician who fits your needs, communication style, and long-term health goals.',
     date: '2024-09-15',
     readingMinutes: 5,
+    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&q=80',
+    imageAlt: 'Doctor in a clinical setting ready to meet a patient',
     body: `
 <p>Choosing a primary care physician (PCP) is one of the most important healthcare decisions you'll make. A great PCP becomes a long-term partner in your health — someone who knows your history, coordinates your care, and is your first call when something feels off.</p>
 
@@ -64,6 +68,8 @@ export const ARTICLES: Article[] = [
       'What a primary care physician actually does — and why this relationship matters more than most patients realize.',
     date: '2024-08-22',
     readingMinutes: 6,
+    image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1200&q=80',
+    imageAlt: 'Stethoscope representing primary care medicine',
     body: `
 <p>Most people think of a primary care physician (PCP) as someone who treats colds and refills prescriptions. That's a fraction of the actual job. A good PCP is the quarterback of your health — the one provider who sees the whole field.</p>
 
