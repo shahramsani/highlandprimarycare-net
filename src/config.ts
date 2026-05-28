@@ -39,8 +39,8 @@ export const CONTACT = {
     { day: 'Sunday', open: null, close: null },
   ],
   socials: {
-    facebook: 'https://www.facebook.com/highlandprimarycare',
-    instagram: 'https://www.instagram.com/highlandprimarycare',
+    facebook: 'https://www.facebook.com/highlandprimarycare1',
+    instagram: 'https://www.instagram.com/highland.primary.care/',
     youtube: 'https://www.youtube.com/highlandprimarycare',
   },
 } as const;
