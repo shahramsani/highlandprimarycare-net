@@ -362,12 +362,10 @@ const breadcrumbItems = [
           pricingTiers.map((tier, i) => (
             <Reveal delay={((i % 4) * 100) as 0 | 100 | 200 | 300}>
               <div class={tier.featured ? 'price-card-featured h-full' : 'price-card h-full'}>
-                {tier.featured && tier.badge && (
-                  <div class="-mx-6 -mt-6 mb-6 flex items-center justify-center gap-1.5 bg-brand-red py-3 text-eyebrow font-semibold uppercase tracking-[0.1em] text-white md:-mx-8 md:-mt-8">
-                    <Icon name="star" size={12} class="fill-current" />
-                    {tier.badge}
-                  </div>
-                )}
+                <div class:list={['-mx-6 -mt-6 mb-6 flex items-center justify-center gap-1.5 py-3 text-eyebrow font-semibold uppercase tracking-[0.1em] md:-mx-8 md:-mt-8', tier.featured && tier.badge ? 'bg-brand-red text-white' : 'invisible']}>
+                  <Icon name="star" size={12} class="fill-current" />
+                  {tier.badge ?? 'Most Popular'}
+                </div>
                 <h3 class="font-display text-h4 font-semibold text-ink-900">
                   {tier.name}
                 </h3>
