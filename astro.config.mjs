@@ -7,6 +7,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://web.highlandprimarycare.com',
   trailingSlash: 'always',
+  redirects: {
+    '/medicalweightloss': '/medical-weight-loss/',
+    '/medicalweightloss/': '/medical-weight-loss/',
+  },
   build: {
     format: 'directory',
     inlineStylesheets: 'auto',
