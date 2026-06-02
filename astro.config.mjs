@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://web.highlandprimarycare.com',
+  site: 'https://highlandprimarycare.net',
   trailingSlash: 'always',
   redirects: {
     '/medicalweightloss': '/medical-weight-loss/',
@@ -31,10 +31,10 @@ export default defineConfig({
       serialize(item) {
         // Boost priority for high-value commercial pages
         const highValue = [
-          'https://web.highlandprimarycare.com/',
-          'https://web.highlandprimarycare.com/medical-weight-loss/',
-          'https://web.highlandprimarycare.com/testosterone-replacement-therapy/',
-          'https://web.highlandprimarycare.com/semaglutide-pricing-sherman-tx/',
+          'https://highlandprimarycare.net/',
+          'https://highlandprimarycare.net/medical-weight-loss/',
+          'https://highlandprimarycare.net/testosterone-replacement-therapy/',
+          'https://highlandprimarycare.net/semaglutide-pricing-sherman-tx/',
         ];
         if (highValue.includes(item.url)) {
           item.priority = 1.0;

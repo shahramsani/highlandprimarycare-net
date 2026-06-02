@@ -11,7 +11,7 @@ import Parallax from '../components/Parallax.astro';
 import MagneticButton from '../components/MagneticButton.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
 import { PROVIDERS, BOOKING, CONTACT, SITE } from '../config';
-import { localBusinessSchema, breadcrumbSchema } from '../schema';
+import { localBusinessSchema, physicianSchema, breadcrumbSchema } from '../schema';
 
 const differentiators = [
   { icon: 'shield-check', title: 'Board-certified physicians', body: 'Every provider is board-certified in Internal Medicine, Family Medicine, or holds a Doctorate of Nursing Practice.' },
@@ -28,6 +28,7 @@ const differentiators = [
   description="Highland Primary Care is a long-established Sherman, TX clinic with board-certified physicians, on-site labs, and same-day appointments. Meet our team."
   schemaJson={[
     localBusinessSchema(),
+    ...PROVIDERS.map((p) => physicianSchema(p)),
     breadcrumbSchema([
       { name: 'Home', url: `${SITE.url}/` },
       { name: 'About', url: `${SITE.url}/about-us/` },

@@ -344,11 +344,11 @@ if (props.kind === 'service') {
         physicianSchema(props.provider),
         faqSchema(providerCtx.faqs),
         breadcrumbSchema([
-          { name: 'Home', url: 'https://web.highlandprimarycare.com/' },
-          { name: 'About', url: 'https://web.highlandprimarycare.com/about-us/' },
+          { name: 'Home', url: 'https://highlandprimarycare.net/' },
+          { name: 'About', url: 'https://highlandprimarycare.net/about-us/' },
           {
             name: props.provider.name,
-            url: `https://web.highlandprimarycare.com/${props.provider.slug}/`,
+            url: `https://highlandprimarycare.net/${props.provider.slug}/`,
           },
         ]),
       ]}
@@ -590,11 +590,11 @@ if (props.kind === 'service') {
         }),
         faqSchema(props.content.faqs),
         breadcrumbSchema([
-          { name: 'Home', url: 'https://web.highlandprimarycare.com/' },
-          { name: 'Services', url: 'https://web.highlandprimarycare.com/our-services/' },
+          { name: 'Home', url: 'https://highlandprimarycare.net/' },
+          { name: 'Services', url: 'https://highlandprimarycare.net/our-services/' },
           {
             name: props.content.title,
-            url: `https://web.highlandprimarycare.com/${props.content.slug}/`,
+            url: `https://highlandprimarycare.net/${props.content.slug}/`,
           },
         ]),
       ]}

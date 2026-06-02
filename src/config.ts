@@ -9,7 +9,7 @@ export const SITE = {
   tagline: 'Your trusted primary care clinic in Sherman, TX',
   description:
     'Highland Primary Care in Sherman, TX offers preventive care, medical weight loss, TRT, and chronic disease management. Now accepting new patients.',
-  url: 'https://web.highlandprimarycare.com',
+  url: 'https://highlandprimarycare.net',
   locale: 'en-US',
   ogImage: '/og-default.jpg',
 } as const;

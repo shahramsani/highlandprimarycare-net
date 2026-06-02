@@ -12,6 +12,7 @@ interface Props {
   description?: string;
   canonical?: string;
   ogImage?: string;
+  ogType?: string;
   noindex?: boolean;
   schemaJson?: object | object[];
 }
@@ -21,6 +22,7 @@ const {
   description = SITE.description,
   canonical = SITE.url + Astro.url.pathname,
   ogImage = SITE.url + SITE.ogImage,
+  ogType = 'website',
   noindex = false,
   schemaJson,
 } = Astro.props;
@@ -47,7 +49,7 @@ const schemas = Array.isArray(schemaJson) ? schemaJson : schemaJson ? [schemaJso
       openGraph={{
         basic: {
           title: fullTitle,
-          type: 'website',
+          type: ogType,
           image: ogImage,
           url: canonical,
         },

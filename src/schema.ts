@@ -50,6 +50,13 @@ export const localBusinessSchema = () => ({
     'Tom Bean, TX',
     'Gunter, TX',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    reviewCount: '24',
+    bestRating: '5',
+    worstRating: '1',
+  },
   sameAs: [
     CONTACT.socials.facebook,
     CONTACT.socials.instagram,
