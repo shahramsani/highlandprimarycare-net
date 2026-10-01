@@ -1,0 +1,75 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import { BOOKING } from '../config';
+
+const { formId, embedHost } = BOOKING.metaCapture;
+const iframeId = `inline-${formId}`;
+const formSrc = `${embedHost}/widget/form/${formId}`;
+const embedScriptSrc = `${embedHost}/js/form_embed.js`;
+
+// Fail the build if config drifts from the GHL-issued embed code.
+const expected = {
+  formSrc: 'https://app.highlandprimarycare.cc/widget/form/eeVSEodSJ2HEHysk93Fy',
+  iframeId: 'inline-eeVSEodSJ2HEHysk93Fy',
+  formId: 'eeVSEodSJ2HEHysk93Fy',
+  embedScriptSrc: 'https://app.highlandprimarycare.cc/js/form_embed.js',
+};
+const actual = { formSrc, iframeId, formId, embedScriptSrc };
+for (const key of Object.keys(expected) as Array<keyof typeof expected>) {
+  if (actual[key] !== expected[key]) {
+    throw new Error(`book.astro: ${key} is "${actual[key]}", expected "${expected[key]}"`);
+  }
+}
+---
+
+<LandingLayout
+  title="Now Accepting New Patients | Highland Primary Care"
+  description="Board-certified providers in Sherman, TX. Same-day and same-week appointments available."
+>
+  <section class="mx-auto max-w-2xl px-4 pb-8 pt-3 sm:pt-6">
+    <h1 class="text-2xl font-extrabold tracking-[-0.025em] sm:text-4xl">
+      Now Accepting New Patients in Sherman
+    </h1>
+    <p class="mb-0 mt-1.5 text-[0.95rem] leading-snug sm:mt-3 sm:text-lg">
+      Board-certified providers. Same-day and same-week appointments available.
+    </p>
+    <p class="mb-0 mt-3 text-[0.95rem] leading-snug text-ink-900 sm:mt-5">
+      <strong>Step 1 of 2:</strong> Tell us who you are. Next, you'll pick your appointment time.
+    </p>
+
+    <div class="mt-2 sm:mt-4">
+      <iframe
+        style="width:100%;height:100%;border:none;border-radius:8px"
+        data-src={formSrc}
+        id={iframeId}
+        data-layout="{'id':'INLINE'}"
+        data-trigger-type="alwaysShow"
+        data-trigger-value=""
+        data-activation-type="alwaysActivated"
+        data-activation-value=""
+        data-deactivation-type="neverDeactivate"
+        data-deactivation-value=""
+        data-form-name="Meta Booking Capture"
+        data-height="1041"
+        data-layout-iframe-id={iframeId}
+        data-form-id={formId}
+        data-cookie-consent="true"
+        data-cookie-consent-provider="auto"
+        title="Meta Booking Capture"></iframe>
+      <script is:inline>
+        (function () {
+          var f = document.currentScript.previousElementSibling;
+          if (!f || f.tagName !== 'IFRAME' || f.getAttribute('src')) return;
+          var base = f.getAttribute('data-src');
+          var q = window.location.search.replace(/^\?/, '');
+          f.src = q ? base + (base.indexOf('?') === -1 ? '?' : '&') + q : base;
+        })();
+      </script>
+      <script is:inline src={embedScriptSrc}></script>
+    </div>
+
+    <p class="mb-0 mt-6 text-center text-sm text-ink-500">
+      Highland Primary Care · 300 N Highland Ave, Suite 455, Sherman, TX 75092
+    </p>
+  </section>
+</LandingLayout>

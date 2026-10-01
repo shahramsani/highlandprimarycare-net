@@ -27,6 +27,7 @@ export default defineConfig({
         !page.includes('/admin/') &&
         !page.includes('/preview/') &&
         !page.endsWith('/404/') &&
+        !page.endsWith('/book/') &&
         !page.endsWith('/medicalweightloss/'),
       serialize(item) {
         // Boost priority for high-value commercial pages

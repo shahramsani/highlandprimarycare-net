@@ -52,6 +52,8 @@ export const BOOKING = {
   trt: 'https://app.highlandprimarycare.cc/widget/form/edEHoM77zSLn1shx3Ae9',
   // Healow online appointment link — all "Book Now" / "Book Visit" CTA buttons
   bookNow: 'https://healow.com/apps/practice/highland-primary-care-llc-29219?v=2&t=1',
+  // GHL "Meta Booking Capture" form — embedded on the /book paid-traffic landing page
+  metaCapture: { formId: 'eeVSEodSJ2HEHysk93Fy', embedHost: 'https://app.highlandprimarycare.cc' },
 } as const;
 
 export const NAV: Array<{
