@@ -1,0 +1,58 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import { BOOKING } from '../../config';
+
+const { healowUrl } = BOOKING.metaCapture;
+---
+
+<LandingLayout
+  title="Choose Your Appointment Time | Highland Primary Care"
+  description="Step 2 of 2: choose your appointment time at Highland Primary Care in Sherman, TX."
+>
+  <link slot="head" rel="preconnect" href="https://healow.com" />
+
+  <section class="mx-auto max-w-2xl px-4 pb-8 pt-5 sm:pt-10">
+    <p class="mb-1 text-sm font-bold text-ink-500">Step 2 of 2</p>
+    <h1 class="text-2xl font-extrabold tracking-[-0.025em] sm:text-4xl">You're in. One more step.</h1>
+    <p class="mb-0 mt-3 text-[0.95rem] leading-snug sm:text-lg">
+      Choose your appointment time on our secure scheduling system. It can take up to 20 seconds to
+      load — please keep this screen open.
+    </p>
+
+    <a
+      id="healow-cta"
+      href={healowUrl}
+      class="mt-6 flex w-full items-center justify-center rounded-lg px-6 py-4 text-center text-lg font-semibold text-white sm:inline-flex sm:w-auto"
+      style="background-color:#155EEF"
+    >See Open Appointment Times</a>
+    <script is:inline>
+      (function () {
+        var a = document.getElementById('healow-cta');
+        var label = a.textContent;
+        var busy = false;
+        a.addEventListener('click', function (e) {
+          if (busy) {
+            e.preventDefault();
+            return;
+          }
+          busy = true;
+          a.textContent = 'Loading scheduler…';
+          a.setAttribute('aria-busy', 'true');
+          a.style.opacity = '0.85';
+        });
+        // Back button restores this page from bfcache; reset so the button works again.
+        window.addEventListener('pageshow', function (e) {
+          if (!e.persisted) return;
+          busy = false;
+          a.textContent = label;
+          a.removeAttribute('aria-busy');
+          a.style.opacity = '';
+        });
+      })();
+    </script>
+
+    <p class="mb-0 mt-8 text-center text-sm text-ink-500">
+      Highland Primary Care · 300 N Highland Ave, Suite 455, Sherman, TX 75092
+    </p>
+  </section>
+</LandingLayout>
