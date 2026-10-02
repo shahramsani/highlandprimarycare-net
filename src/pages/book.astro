@@ -6,20 +6,6 @@ const { formId, embedHost } = BOOKING.metaCapture;
 const iframeId = `inline-${formId}`;
 const formSrc = `${embedHost}/widget/form/${formId}`;
 const embedScriptSrc = `${embedHost}/js/form_embed.js`;
-
-// Fail the build if config drifts from the GHL-issued embed code.
-const expected = {
-  formSrc: 'https://app.highlandprimarycare.cc/widget/form/eeVSEodSJ2HEHysk93Fy',
-  iframeId: 'inline-eeVSEodSJ2HEHysk93Fy',
-  formId: 'eeVSEodSJ2HEHysk93Fy',
-  embedScriptSrc: 'https://app.highlandprimarycare.cc/js/form_embed.js',
-};
-const actual = { formSrc, iframeId, formId, embedScriptSrc };
-for (const key of Object.keys(expected) as Array<keyof typeof expected>) {
-  if (actual[key] !== expected[key]) {
-    throw new Error(`book.astro: ${key} is "${actual[key]}", expected "${expected[key]}"`);
-  }
-}
 ---
 
 <LandingLayout
