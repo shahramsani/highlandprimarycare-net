@@ -10,6 +10,18 @@ const { healowUrl } = BOOKING.metaCapture;
   description="Step 2 of 2: choose your appointment time at Highland Primary Care in Sherman, TX."
 >
   <link slot="head" rel="preconnect" href="https://healow.com" />
+  <script slot="head" is:inline>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('set','autoConfig',false,'812623817653317');
+    fbq('init','812623817653317');
+    fbq('track','PageView');
+    fbq('trackCustom','BookStep2');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=812623817653317&ev=PageView&noscript=1" /></noscript>
 
   <section class="mx-auto max-w-2xl px-4 pb-8 pt-5 sm:pt-10">
     <p class="mb-1 text-sm font-bold text-ink-500">Step 2 of 2</p>
