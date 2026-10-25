@@ -73,11 +73,15 @@ const embedScriptSrc = `${embedHost}/js/form_embed.js`;
       >
     </p>
     <script is:inline>
-      // Meta traffic gets the Meta tracking line; the choice is kept for the session so
-      // /book/next/ shows the same number. The HTML default (5671) is the no-JS fallback.
+      // Paid Meta traffic (utm_source=facebook AND utm_medium=cpc) gets the Meta tracking line.
+      // Not fbclid or utm_source alone: the Page's Book Now button sends utm_medium=organic and
+      // Facebook adds fbclid to organic clicks. Kept for the session so /book/next/ matches; the
+      // HTML default (5671) is the no-JS fallback.
       (function () {
         var p = new URLSearchParams(window.location.search);
-        var fromMeta = p.has('fbclid') || (p.get('utm_source') || '').toLowerCase() === 'facebook';
+        var fromMeta =
+          (p.get('utm_source') || '').toLowerCase() === 'facebook' &&
+          (p.get('utm_medium') || '').toLowerCase() === 'cpc';
         var line = fromMeta ? '1256' : '5671';
         try {
           if (fromMeta || !sessionStorage.getItem('hpc_call_line')) {

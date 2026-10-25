@@ -71,7 +71,7 @@ const { healowUrl } = BOOKING.metaCapture;
     </p>
     <script is:inline>
       // Same number /book/ chose for this session (sessionStorage); falls back to this URL's own
-      // params, then to the HTML default (5671).
+      // params (same rule: utm_source=facebook AND utm_medium=cpc), then the HTML default (5671).
       (function () {
         var line = null;
         try {
@@ -79,8 +79,11 @@ const { healowUrl } = BOOKING.metaCapture;
         } catch (e) {}
         if (!line) {
           var p = new URLSearchParams(window.location.search);
-          line = p.has('fbclid') || (p.get('utm_source') || '').toLowerCase() === 'facebook'
-            ? '1256' : '5671';
+          line =
+            (p.get('utm_source') || '').toLowerCase() === 'facebook' &&
+            (p.get('utm_medium') || '').toLowerCase() === 'cpc'
+              ? '1256'
+              : '5671';
         }
         if (line !== '1256') return;
         var a = document.getElementById('call-fallback');
