@@ -66,6 +66,32 @@ const embedScriptSrc = `${embedHost}/js/form_embed.js`;
       <script is:inline src={embedScriptSrc}></script>
     </div>
 
+    <p class="mb-0 mt-4 text-center text-sm text-ink-500">
+      Prefer to call?
+      <a id="call-fallback" href="tel:+19038715671" class="font-semibold text-ink-900 underline"
+        >(903) 871-5671</a
+      >
+    </p>
+    <script is:inline>
+      // Meta traffic gets the Meta tracking line; the choice is kept for the session so
+      // /book/next/ shows the same number. The HTML default (5671) is the no-JS fallback.
+      (function () {
+        var p = new URLSearchParams(window.location.search);
+        var fromMeta = p.has('fbclid') || (p.get('utm_source') || '').toLowerCase() === 'facebook';
+        var line = fromMeta ? '1256' : '5671';
+        try {
+          if (fromMeta || !sessionStorage.getItem('hpc_call_line')) {
+            sessionStorage.setItem('hpc_call_line', line);
+          }
+          line = sessionStorage.getItem('hpc_call_line');
+        } catch (e) {}
+        if (line !== '1256') return;
+        var a = document.getElementById('call-fallback');
+        a.href = 'tel:+19038711256';
+        a.textContent = '(903) 871-1256';
+      })();
+    </script>
+
     <p class="mb-0 mt-6 text-center text-sm text-ink-500">
       Highland Primary Care · 300 N Highland Ave, Suite 455, Sherman, TX 75092
     </p>

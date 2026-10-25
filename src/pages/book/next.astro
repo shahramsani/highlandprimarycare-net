@@ -63,6 +63,32 @@ const { healowUrl } = BOOKING.metaCapture;
       })();
     </script>
 
+    <p class="mb-0 mt-4 text-center text-sm text-ink-500 sm:text-left">
+      Prefer to call?
+      <a id="call-fallback" href="tel:+19038715671" class="font-semibold text-ink-900 underline"
+        >(903) 871-5671</a
+      >
+    </p>
+    <script is:inline>
+      // Same number /book/ chose for this session (sessionStorage); falls back to this URL's own
+      // params, then to the HTML default (5671).
+      (function () {
+        var line = null;
+        try {
+          line = sessionStorage.getItem('hpc_call_line');
+        } catch (e) {}
+        if (!line) {
+          var p = new URLSearchParams(window.location.search);
+          line = p.has('fbclid') || (p.get('utm_source') || '').toLowerCase() === 'facebook'
+            ? '1256' : '5671';
+        }
+        if (line !== '1256') return;
+        var a = document.getElementById('call-fallback');
+        a.href = 'tel:+19038711256';
+        a.textContent = '(903) 871-1256';
+      })();
+    </script>
+
     <p class="mb-0 mt-8 text-center text-sm text-ink-500">
       Highland Primary Care · 300 N Highland Ave, Suite 455, Sherman, TX 75092
     </p>
